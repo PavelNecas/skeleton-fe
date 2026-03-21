@@ -75,6 +75,61 @@ docker compose build  # Build Docker image
 docker compose up     # Start frontend container
 ```
 
+## Issue Workflow
+
+When working on a GitHub issue in this project, follow this process:
+
+### 1. Read the issue
+```bash
+gh issue view <number> --repo PavelNecas/skeleton-fe
+```
+Read the issue description, comments, and understand the acceptance criteria.
+
+### 2. Check dependencies
+Each phase issue (#2–#9) has dependencies listed. Before starting, verify that blocking issues are completed:
+- **Phase 1** (#2): no dependencies
+- **Phase 2** (#3): blocked by #2
+- **Phase 3** (#4): blocked by #3, parallel with #5
+- **Phase 4** (#5): blocked by #3, parallel with #4
+- **Phase 5** (#6): blocked by #4 + #5
+- **Phase 6** (#7): blocked by #6
+- **Phase 7** (#8): blocked by #7
+- **Phase 8** (#9): blocked by #8
+
+### 3. Read only relevant documentation
+Determine which `.claude/docs/` file relates to the issue. Do NOT read unrelated docs. See **Read Discipline** above.
+
+### 4. Plan before coding
+For non-trivial issues, create a plan. Use tasks to track progress within the conversation.
+
+### 5. Implement
+- Work through the issue's task checklist
+- Write tests alongside implementation (not after)
+- Follow code conventions from this file
+- Commit logically — one commit per logical unit, not one giant commit
+
+### 6. Verify
+Before marking done:
+```bash
+pnpm lint
+pnpm type-check
+pnpm test
+```
+All must pass. Do not skip verification.
+
+### 7. Update issue
+Post a comment on the issue summarizing what was done. If all acceptance criteria are met, close the issue:
+```bash
+gh issue close <number> --repo PavelNecas/skeleton-fe --comment "Done: <summary>"
+```
+
+### Rules
+- **One issue at a time.** Do not mix work from multiple issues in one session.
+- **Do not start an issue if its dependencies are not complete.**
+- **Always verify before closing.** Run lint, type-check, and tests.
+- **Post progress as issue comments** — keep the issue as the source of truth, not just the conversation.
+- **Backend changes needed?** Some issues depend on pending backend changes (locale/translationLinks in routes, defaultLocale in sites). If backend fields are not yet available, use fallback values from env vars and add a TODO comment referencing the backend issue.
+
 ## Architecture Documentation
 
 Detailed documentation per area in `.claude/docs/`:
