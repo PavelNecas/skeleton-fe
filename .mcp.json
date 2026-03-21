@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "superpowers": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/Users/pavelnecas/.claude/mcp-servers/superpowers-mcp/build/index.js"
+      ],
+      "env": {}
+    }
+  }
+}
