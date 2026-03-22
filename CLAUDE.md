@@ -59,7 +59,15 @@ Frontend e-commerce skeleton on **Next.js (App Router) + TypeScript**. Monorepo 
 - Unit tests: Vitest, mock external dependencies (ES client, HTTP client)
 - Component tests: Testing Library + Vitest, test behavior not implementation
 - E2E tests: Playwright, test user flows against running app
-- Test files: `*.test.ts` / `*.test.tsx`
+- Test files: `*.test.ts` / `*.test.tsx` (unit/component), `apps/web/e2e/*.spec.ts` (E2E)
+
+### E2E Tests
+- E2E specs live in `apps/web/e2e/` — plain TypeScript, no `'use client'`
+- Shared path constants are exported from `apps/web/e2e/fixtures.ts`
+- Use `test.describe` blocks; each test must be fully independent (no shared state)
+- Prefer `page.getByRole` and `page.getByLabel` for accessible selectors
+- Tests run against a live app connected to ES; use `test.skip()` gracefully when backend data is unavailable
+- `BASE_URL` env var overrides the default `http://localhost:3000`
 
 ## Commands
 
