@@ -38,8 +38,7 @@ describe('parseJwtPayload', () => {
 describe('isAuthenticated', () => {
   function makeCookieStore(cookies: Record<string, string>) {
     return {
-      get: (name: string) =>
-        cookies[name] !== undefined ? { value: cookies[name] } : undefined,
+      get: (name: string) => (cookies[name] !== undefined ? { value: cookies[name] } : undefined),
     }
   }
 
