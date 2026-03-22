@@ -7,20 +7,10 @@ import { buildMetadata } from '@/core/components/shared/SEOHead'
 import { resolveComponent } from '@/lib/component-resolver'
 import { fetchPageData } from '@/lib/data-fetching'
 import { fetchMainNavigation } from '@/lib/navigation'
+import { loadSiteConfig } from '@/lib/site-config'
 import { parseMiddlewareHeaders } from '@/lib/types'
 import type { RouteInfo } from '@/lib/types'
 import { buildTranslationUrls, buildHreflangLinks } from '@/lib/url'
-
-/**
- * Derives a human-readable site name from the site prefix.
- * e.g. "my_site" → "My site"
- */
-function deriveSiteName(sitePrefix: string): string {
-  return sitePrefix
-    .split('_')
-    .map((part, index) => (index === 0 ? part.charAt(0).toUpperCase() + part.slice(1) : part))
-    .join(' ')
-}
 
 function parseRouteInfo(routeJson: string): RouteInfo | null {
   try {
@@ -122,7 +112,8 @@ export default async function CatchAllPage() {
     notFound()
   }
 
-  const siteName = deriveSiteName(sitePrefix)
+  // Load site config (name, theme, features) for this site
+  const siteConfig = await loadSiteConfig(sitePrefix)
 
   // Build locale-aware translation links for LanguageSwitcher
   const translationLinks = buildTranslationUrls(
@@ -135,10 +126,11 @@ export default async function CatchAllPage() {
   return (
     <MainLayout
       navigationNodes={navigationNodes}
-      siteName={siteName}
+      siteName={siteConfig.name}
       currentLocale={locale}
       defaultLocale={defaultLocale}
       translationLinks={translationLinks}
+      theme={siteConfig.theme}
     >
       <Template data={data} route={routeInfo} locale={locale} sitePrefix={sitePrefix} />
     </MainLayout>
