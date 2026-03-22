@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { AuthClient } from '@skeleton-fe/sdk-pimcore'
 
 vi.mock('@skeleton-fe/sdk-pimcore', () => {
   const mockClientCredentials = vi.fn()
@@ -10,8 +11,6 @@ vi.mock('@skeleton-fe/sdk-pimcore', () => {
     PimcoreClient: mockPimcoreClient,
   }
 })
-
-import { AuthClient } from '@skeleton-fe/sdk-pimcore'
 
 const makeTokenResponse = (expiresIn = 3600) => ({
   token_type: 'Bearer' as const,

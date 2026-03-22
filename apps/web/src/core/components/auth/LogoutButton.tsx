@@ -1,7 +1,6 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-
 import { Button } from '@skeleton-fe/ui'
 
 interface LogoutButtonProps {

@@ -36,7 +36,10 @@ export async function getM2MToken(): Promise<string> {
   })
   const authClient = new AuthClient(pimcoreClient)
 
-  const tokens = await authClient.clientCredentials({ client_id: clientId, client_secret: clientSecret })
+  const tokens = await authClient.clientCredentials({
+    client_id: clientId,
+    client_secret: clientSecret,
+  })
 
   cachedToken = {
     accessToken: tokens.access_token,

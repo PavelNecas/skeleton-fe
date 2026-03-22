@@ -1,21 +1,15 @@
 import type { NextRequest, NextResponse } from 'next/server'
 import { NextResponse as NextResponseClass } from 'next/server'
-
-import { AuthClient } from '@skeleton-fe/sdk-pimcore'
-import { PimcoreClient } from '@skeleton-fe/sdk-pimcore'
+import { AuthClient, PimcoreClient } from '@skeleton-fe/sdk-pimcore'
 
 import { LOGIN_PATH, PROTECTED_ROUTES } from './constants'
 import { getRefreshToken, hasValidAccessToken, setAuthCookies } from './session'
 
 export function isProtectedRoute(pathname: string): boolean {
-  return PROTECTED_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  )
+  return PROTECTED_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`))
 }
 
-export async function handleAuthMiddleware(
-  request: NextRequest,
-): Promise<NextResponse | null> {
+export async function handleAuthMiddleware(request: NextRequest): Promise<NextResponse | null> {
   const { pathname } = request.nextUrl
 
   if (!isProtectedRoute(pathname)) {

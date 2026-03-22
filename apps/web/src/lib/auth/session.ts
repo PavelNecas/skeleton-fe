@@ -1,5 +1,4 @@
 import type { NextRequest, NextResponse } from 'next/server'
-
 import type { TokenResponse } from '@skeleton-fe/sdk-pimcore'
 
 import { COOKIE_ACCESS_TOKEN, COOKIE_REFRESH_TOKEN, REFRESH_TOKEN_MAX_AGE } from './constants'

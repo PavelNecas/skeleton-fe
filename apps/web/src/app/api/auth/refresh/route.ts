@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-
 import { AuthClient, PimcoreClient } from '@skeleton-fe/sdk-pimcore'
 
 import { COOKIE_REFRESH_TOKEN } from '@/lib/auth/constants'

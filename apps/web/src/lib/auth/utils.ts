@@ -21,7 +21,8 @@ export function parseJwtPayload(token: string): JwtPayload {
     throw new Error('Invalid JWT: expected 3 parts')
   }
 
-  const payload = parts[1]
+  // parts.length === 3 is asserted above, so parts[1] is always defined
+  const payload = parts[1] as string
 
   // Base64url → base64
   const base64 = payload.replace(/-/g, '+').replace(/_/g, '/')

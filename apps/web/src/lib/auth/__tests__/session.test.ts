@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-
 import type { TokenResponse } from '@skeleton-fe/sdk-pimcore'
 
 // We need to test in dev mode (non-production) by default

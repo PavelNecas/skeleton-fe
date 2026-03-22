@@ -1,4 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { NextResponse } from 'next/server'
+import { AuthClient } from '@skeleton-fe/sdk-pimcore'
+
+import { hasValidAccessToken, getRefreshToken, setAuthCookies } from '../session'
+import { isProtectedRoute, handleAuthMiddleware } from '../middleware'
 
 vi.mock('@skeleton-fe/sdk-pimcore', () => {
   const mockRefreshToken = vi.fn()
@@ -11,7 +16,11 @@ vi.mock('@skeleton-fe/sdk-pimcore', () => {
 })
 
 vi.mock('next/server', () => {
-  const redirect = vi.fn((url: URL) => ({ type: 'redirect', url: url.toString(), cookies: { set: vi.fn() } }))
+  const redirect = vi.fn((url: URL) => ({
+    type: 'redirect',
+    url: url.toString(),
+    cookies: { set: vi.fn() },
+  }))
   const next = vi.fn(() => ({ type: 'next', cookies: { set: vi.fn() } }))
   return {
     NextResponse: { redirect, next },
@@ -23,11 +32,6 @@ vi.mock('../session', () => ({
   getRefreshToken: vi.fn(),
   setAuthCookies: vi.fn(),
 }))
-
-import { NextResponse } from 'next/server'
-import { AuthClient } from '@skeleton-fe/sdk-pimcore'
-import { hasValidAccessToken, getRefreshToken, setAuthCookies } from '../session'
-import { isProtectedRoute, handleAuthMiddleware } from '../middleware'
 
 const mockHasValidAccessToken = vi.mocked(hasValidAccessToken)
 const mockGetRefreshToken = vi.mocked(getRefreshToken)
