@@ -8,6 +8,7 @@ export interface HeaderProps {
   siteName: string
   navigationNodes: NavigationNode[]
   currentLocale: string
+  defaultLocale?: string
   translationLinks: TranslationLink[]
 }
 
@@ -15,6 +16,7 @@ export function Header({
   siteName,
   navigationNodes,
   currentLocale,
+  defaultLocale = 'cs',
   translationLinks,
 }: HeaderProps) {
   return (
@@ -24,7 +26,11 @@ export function Header({
           <Link href="/" className="text-lg font-semibold hover:text-primary transition-colors">
             {siteName}
           </Link>
-          <Navigation nodes={navigationNodes} />
+          <Navigation
+            nodes={navigationNodes}
+            currentLocale={currentLocale}
+            defaultLocale={defaultLocale}
+          />
         </div>
         <LanguageSwitcher currentLocale={currentLocale} links={translationLinks} />
       </div>

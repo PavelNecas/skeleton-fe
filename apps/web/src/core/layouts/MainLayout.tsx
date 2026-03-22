@@ -18,6 +18,7 @@ export function MainLayout({
   siteName,
   navigationNodes,
   currentLocale,
+  defaultLocale,
   translationLinks,
 }: MainLayoutProps) {
   return (
@@ -26,6 +27,7 @@ export function MainLayout({
         siteName={siteName}
         navigationNodes={navigationNodes}
         currentLocale={currentLocale}
+        defaultLocale={defaultLocale}
         translationLinks={translationLinks}
       />
       <main className="flex-1">{children}</main>
