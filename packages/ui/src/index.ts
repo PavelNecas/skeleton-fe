@@ -16,4 +16,31 @@ export {
 } from './components/select'
 export { Checkbox } from './components/checkbox'
 export { Slider } from './components/slider'
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from './components/dialog'
+export {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+  type SheetContentProps,
+} from './components/sheet'
+export { Popover, PopoverTrigger, PopoverContent } from './components/popover'
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './components/tooltip'
 export { cn } from './lib/utils'
