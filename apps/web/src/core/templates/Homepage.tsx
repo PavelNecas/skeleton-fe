@@ -1,12 +1,21 @@
+import type { Page } from '@skeleton-fe/sdk-elastic'
+
+import { BlockRenderer } from '@/core/components/content/BlockRenderer'
 import type { TemplateProps } from '@/lib/types'
 
-export default function Homepage({ locale, sitePrefix }: TemplateProps) {
+export default function Homepage({ data }: TemplateProps) {
+  const page = data as Page
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Homepage</h1>
-      <p className="mt-4 text-muted-foreground">
-        site: {sitePrefix} · locale: {locale}
-      </p>
-    </main>
+    <section className="min-h-screen">
+      <div className="container mx-auto max-w-5xl px-4 py-12">
+        <h1 className="text-4xl font-bold tracking-tight">{page.title}</h1>
+        {page.editables.length > 0 && (
+          <div className="mt-8">
+            <BlockRenderer blocks={page.editables} />
+          </div>
+        )}
+      </div>
+    </section>
   )
 }
