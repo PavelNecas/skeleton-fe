@@ -1,5 +1,5 @@
 {
-  "extends": "@skeleton-fe/config/tsconfig/library.json",
+  "extends": "../../packages/config/tsconfig/library.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src"

@@ -1,5 +1,5 @@
 {
-  "extends": "@skeleton-fe/config/tsconfig/library.json",
+  "extends": "../config/tsconfig/library.json",
   "compilerOptions": {
     "jsx": "react-jsx",
     "outDir": "./dist",
