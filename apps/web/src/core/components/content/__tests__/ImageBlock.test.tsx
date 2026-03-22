@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-
 import type { ImageContentBlock } from '@skeleton-fe/sdk-elastic'
 
 // Mock Next.js Image

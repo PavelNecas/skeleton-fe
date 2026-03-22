@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-
 import type { ContentBlock, Editable } from '@skeleton-fe/sdk-elastic'
 
 vi.mock('next/image', () => ({
@@ -35,15 +34,13 @@ describe('BlockRenderer', () => {
     const divs = container.querySelectorAll('div')
 
     // The inner text order should match sorted order
-    expect(divs[0].innerHTML).toContain('First')
-    expect(divs[1].innerHTML).toContain('Second')
-    expect(divs[2].innerHTML).toContain('Third')
+    expect(divs[0]!.innerHTML).toContain('First')
+    expect(divs[1]!.innerHTML).toContain('Second')
+    expect(divs[2]!.innerHTML).toContain('Third')
   })
 
   it('renders a rich-text block', () => {
-    const blocks: Editable[] = [
-      { type: 'rich-text', order: 1, content: '<p>Hello</p>' },
-    ]
+    const blocks: Editable[] = [{ type: 'rich-text', order: 1, content: '<p>Hello</p>' }]
 
     render(<BlockRenderer blocks={blocks} />)
     expect(screen.getByText('Hello')).toBeInTheDocument()
@@ -85,9 +82,7 @@ describe('BlockRenderer', () => {
   })
 
   it('renders an image block', () => {
-    const blocks: ContentBlock[] = [
-      { type: 'image', order: 1, imageId: 99 },
-    ]
+    const blocks: ContentBlock[] = [{ type: 'image', order: 1, imageId: 99 }]
 
     const { container } = render(<BlockRenderer blocks={blocks} />)
     const img = container.querySelector('img')

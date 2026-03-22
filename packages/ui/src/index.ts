@@ -43,7 +43,14 @@ export {
 } from './components/sheet'
 export { Popover, PopoverTrigger, PopoverContent } from './components/popover'
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './components/tooltip'
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './components/card'
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from './components/card'
 export { Badge, badgeVariants, type BadgeProps } from './components/badge'
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './components/tabs'
 export {

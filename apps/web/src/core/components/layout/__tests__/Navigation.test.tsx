@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-
 import type { NavigationNode } from '@skeleton-fe/sdk-elastic'
 
 vi.mock('next/link', () => ({
@@ -88,7 +87,14 @@ describe('Navigation', () => {
 
   it('uses id as fallback label when label is null', () => {
     const nullLabelNode: NavigationNode[] = [
-      { id: 'node-id', path: '/path', label: null, href: '/path', documentType: 'page', children: [] },
+      {
+        id: 'node-id',
+        path: '/path',
+        label: null,
+        href: '/path',
+        documentType: 'page',
+        children: [],
+      },
     ]
 
     render(<Navigation nodes={nullLabelNode} />)

@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-
 import type { RichTextEditable } from '@skeleton-fe/sdk-elastic'
 
 import { RichTextBlock } from '../RichTextBlock'

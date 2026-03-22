@@ -1,5 +1,4 @@
 import Link from 'next/link'
-
 import type { NavigationNode } from '@skeleton-fe/sdk-elastic'
 
 export interface NavigationProps {
@@ -16,7 +15,10 @@ function NavigationNodeItem({ node }: NavigationNodeItemProps) {
   return (
     <li>
       {node.href ? (
-        <Link href={node.href} className="block px-3 py-2 text-sm hover:text-primary transition-colors">
+        <Link
+          href={node.href}
+          className="block px-3 py-2 text-sm hover:text-primary transition-colors"
+        >
           {label}
         </Link>
       ) : (

@@ -20,12 +20,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher'
 
 describe('LanguageSwitcher', () => {
   it('renders current locale as trigger text', () => {
-    render(
-      <LanguageSwitcher
-        currentLocale="en"
-        links={[{ locale: 'cs', href: '/cs' }]}
-      />,
-    )
+    render(<LanguageSwitcher currentLocale="en" links={[{ locale: 'cs', href: '/cs' }]} />)
 
     expect(screen.getByText('en')).toBeInTheDocument()
   })
@@ -46,12 +41,7 @@ describe('LanguageSwitcher', () => {
   })
 
   it('renders correct hrefs for translation links', () => {
-    render(
-      <LanguageSwitcher
-        currentLocale="en"
-        links={[{ locale: 'cs', href: '/cs/home' }]}
-      />,
-    )
+    render(<LanguageSwitcher currentLocale="en" links={[{ locale: 'cs', href: '/cs/home' }]} />)
 
     const link = screen.getByText('cs').closest('a')
     expect(link).toHaveAttribute('href', '/cs/home')

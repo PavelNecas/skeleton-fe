@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-
 import type { CrossroadBlockEditable, CrossroadContentBlock } from '@skeleton-fe/sdk-elastic'
 
 import { getImageUrl } from '@/core/utils/image'
@@ -27,12 +26,7 @@ export function CrossroadBlock({ block }: CrossroadBlockProps) {
             >
               {imageUrl && (
                 <div className="relative aspect-video w-full md:w-1/2">
-                  <Image
-                    src={imageUrl}
-                    alt={item.title}
-                    fill
-                    className="rounded-lg object-cover"
-                  />
+                  <Image src={imageUrl} alt={item.title} fill className="rounded-lg object-cover" />
                 </div>
               )}
               <div className="flex flex-1 flex-col gap-4">

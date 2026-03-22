@@ -1,5 +1,4 @@
 import Image from 'next/image'
-
 import type { ImageContentBlock } from '@skeleton-fe/sdk-elastic'
 
 import { getImageUrl } from '@/core/utils/image'

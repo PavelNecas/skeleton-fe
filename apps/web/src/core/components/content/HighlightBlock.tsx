@@ -1,5 +1,4 @@
 import Image from 'next/image'
-
 import type { HighlightContentBlock } from '@skeleton-fe/sdk-elastic'
 
 import { getImageUrl } from '@/core/utils/image'
@@ -22,12 +21,7 @@ export function HighlightBlock({ block }: HighlightBlockProps) {
             >
               {imageUrl && (
                 <div className="relative aspect-video w-full">
-                  <Image
-                    src={imageUrl}
-                    alt={item.title}
-                    fill
-                    className="rounded-md object-cover"
-                  />
+                  <Image src={imageUrl} alt={item.title} fill className="rounded-md object-cover" />
                 </div>
               )}
               <h3 className="text-lg font-semibold">{item.title}</h3>

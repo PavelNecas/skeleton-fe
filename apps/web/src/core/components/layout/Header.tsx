@@ -1,5 +1,4 @@
 import Link from 'next/link'
-
 import type { NavigationNode } from '@skeleton-fe/sdk-elastic'
 
 import { Navigation } from './Navigation'
