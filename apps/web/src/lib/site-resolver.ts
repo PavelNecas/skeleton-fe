@@ -26,7 +26,7 @@ const siteCache = new Map<string, CacheEntry>()
  * e.g. "skeleton-fe.localhost" → "skeleton_fe_localhost"
  */
 function hostnameToPrefix(hostname: string): string {
-  return hostname.replace(/[.\-]/g, '_')
+  return hostname.replace(/[.-]/g, '_')
 }
 
 /**

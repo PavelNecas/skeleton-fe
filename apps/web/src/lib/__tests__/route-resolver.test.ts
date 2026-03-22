@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+
+import { esSearchOne } from '../elastic-edge'
 import { resolveRoute } from '../route-resolver'
 
 vi.mock('../elastic-edge', () => ({
   esSearchOne: vi.fn(),
 }))
-
-import { esSearchOne } from '../elastic-edge'
 
 const mockEsSearchOne = vi.mocked(esSearchOne)
 

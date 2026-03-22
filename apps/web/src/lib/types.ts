@@ -1,5 +1,4 @@
-import type { Page } from '@skeleton-fe/sdk-elastic'
-import type { Article } from '@skeleton-fe/sdk-elastic'
+import type { Article, Page } from '@skeleton-fe/sdk-elastic'
 
 /**
  * Headers set by middleware and read by the catch-all page component.

@@ -1,7 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { resolveSite } from './lib/site-resolver'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+
 import { detectLocale } from './lib/locale'
 import { resolveRoute } from './lib/route-resolver'
+import { resolveSite } from './lib/site-resolver'
 import { getTemplateName } from './lib/template-registry'
 import type { RouteInfo } from './lib/types'
 
@@ -21,7 +23,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (routeResult.kind === 'redirect') {
     // Reconstruct the canonical URL with locale prefix if needed
     const canonicalPath =
-      locale !== site.defaultLocale ? `/${locale}${routeResult.destination}` : routeResult.destination
+      locale !== site.defaultLocale
+        ? `/${locale}${routeResult.destination}`
+        : routeResult.destination
 
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = canonicalPath
@@ -50,7 +54,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     controllerTemplate: routeResult.controllerTemplate,
   }
 
-  const templateName = getTemplateName(routeResult.controllerTemplate) ?? routeResult.controllerTemplate
+  const templateName =
+    getTemplateName(routeResult.controllerTemplate) ?? routeResult.controllerTemplate
 
   // 5. Rewrite with headers so the catch-all page can read them
   const rewriteUrl = request.nextUrl.clone()

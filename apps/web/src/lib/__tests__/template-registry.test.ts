@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+
 import { getTemplateName, resolveTemplate } from '../template-registry'
 
 // Mock all template imports

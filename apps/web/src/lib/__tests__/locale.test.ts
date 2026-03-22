@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+
 import { detectLocale } from '../locale'
 
 const AVAILABLE_LOCALES = ['cs', 'en']

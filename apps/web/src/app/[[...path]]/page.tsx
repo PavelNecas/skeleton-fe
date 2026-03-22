@@ -1,9 +1,10 @@
 import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
-import { parseMiddlewareHeaders } from '@/lib/types'
-import type { RouteInfo } from '@/lib/types'
+
 import { resolveComponent } from '@/lib/component-resolver'
 import { getElasticClient } from '@/lib/elastic-client'
+import { parseMiddlewareHeaders } from '@/lib/types'
+import type { RouteInfo } from '@/lib/types'
 
 /**
  * Catch-all Server Component.

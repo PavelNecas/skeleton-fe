@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+
 import type { TemplateProps } from './types'
 
 type TemplateComponent = ComponentType<TemplateProps>

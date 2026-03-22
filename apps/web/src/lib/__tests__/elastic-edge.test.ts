@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+
 import { esSearch, esSearchOne } from '../elastic-edge'
 
 const mockFetch = vi.fn()
