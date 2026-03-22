@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
+import type { Page } from '@skeleton-fe/sdk-elastic'
 
 vi.mock('next/link', () => ({
   default: ({ href, children }: { href: string; children: React.ReactNode }) => (
@@ -7,10 +8,9 @@ vi.mock('next/link', () => ({
   ),
 }))
 
+import type { RouteInfo, TemplateProps } from '@/lib/types'
+
 import ErrorPage404 from '../ErrorPage404'
-import type { TemplateProps } from '@/lib/types'
-import type { RouteInfo } from '@/lib/types'
-import type { Page } from '@skeleton-fe/sdk-elastic'
 
 const mockRoute: RouteInfo = {
   sourceId: 0,

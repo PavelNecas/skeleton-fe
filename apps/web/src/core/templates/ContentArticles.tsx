@@ -18,17 +18,13 @@ export default function ContentArticles({ data }: TemplateProps) {
         </nav>
 
         <header className="mb-8">
-          {article.name && (
-            <h1 className="text-3xl font-bold tracking-tight">{article.name}</h1>
-          )}
+          {article.name && <h1 className="text-3xl font-bold tracking-tight">{article.name}</h1>}
           <p className="mt-2 text-sm text-muted-foreground">
             <time dateTime={publicationDate.toISOString()}>
               {publicationDate.toLocaleDateString()}
             </time>
           </p>
-          {article.perex && (
-            <p className="mt-4 text-lg text-muted-foreground">{article.perex}</p>
-          )}
+          {article.perex && <p className="mt-4 text-lg text-muted-foreground">{article.perex}</p>}
         </header>
 
         {article.description && (

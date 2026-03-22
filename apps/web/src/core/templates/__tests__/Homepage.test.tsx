@@ -8,9 +8,9 @@ vi.mock('@/core/components/content/BlockRenderer', () => ({
   ),
 }))
 
+import type { RouteInfo, TemplateProps } from '@/lib/types'
+
 import Homepage from '../Homepage'
-import type { TemplateProps } from '@/lib/types'
-import type { RouteInfo } from '@/lib/types'
 
 const mockRoute: RouteInfo = {
   sourceId: 1,

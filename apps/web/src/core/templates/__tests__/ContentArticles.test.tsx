@@ -25,9 +25,9 @@ vi.mock('next/link', () => ({
   ),
 }))
 
+import type { RouteInfo, TemplateProps } from '@/lib/types'
+
 import ContentArticles from '../ContentArticles'
-import type { TemplateProps } from '@/lib/types'
-import type { RouteInfo } from '@/lib/types'
 
 const mockRoute: RouteInfo = {
   sourceId: 10,

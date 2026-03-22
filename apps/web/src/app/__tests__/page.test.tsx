@@ -29,22 +29,21 @@ vi.mock('next/navigation', () => ({
   }),
 }))
 
-// Mock elastic client
-vi.mock('@/lib/elastic-client', () => ({
-  getElasticClient: vi.fn(() => ({
-    pages: {
-      findById: vi.fn().mockResolvedValue({
-        id: '1',
-        title: 'Test Page',
-        path: '/test',
-        locale: 'cs',
-        published: true,
-      }),
-    },
-    articles: {
-      findById: vi.fn().mockResolvedValue(null),
-    },
-  })),
+// Mock shared data-fetching (uses React.cache internally)
+vi.mock('@/lib/data-fetching', () => ({
+  fetchPageData: vi.fn().mockResolvedValue({
+    id: '1',
+    title: 'Test Page',
+    path: '/test',
+    locale: 'cs',
+    published: true,
+    editables: [],
+  }),
+}))
+
+// Mock navigation fetching
+vi.mock('@/lib/navigation', () => ({
+  fetchMainNavigation: vi.fn().mockResolvedValue([]),
 }))
 
 // Mock component resolver to return a simple stub component
@@ -52,6 +51,11 @@ vi.mock('@/lib/component-resolver', () => ({
   resolveComponent: vi.fn().mockResolvedValue(function StubTemplate() {
     return <div data-testid="template-stub">Template rendered</div>
   }),
+}))
+
+// Mock MainLayout to avoid rendering Header/Footer dependencies
+vi.mock('@/core/layouts/MainLayout', () => ({
+  MainLayout: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }))
 
 import CatchAllPage from '../[[...path]]/page'

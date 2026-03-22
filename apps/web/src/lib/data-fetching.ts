@@ -1,5 +1,4 @@
 import { cache } from 'react'
-
 import type { Article, Page } from '@skeleton-fe/sdk-elastic'
 
 import { getElasticClient } from './elastic-client'

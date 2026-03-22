@@ -7,6 +7,7 @@ vi.mock('@/lib/elastic-client', () => ({
 }))
 
 import { getElasticClient } from '@/lib/elastic-client'
+
 import { fetchMainNavigation, DEFAULT_MENU_NAME } from '../navigation'
 
 const mockGetByName = vi.fn()
@@ -20,7 +21,14 @@ beforeEach(() => {
 
 const childNodes: NavigationNode[] = [
   { id: '1', path: '/en', label: 'Home', href: '/', documentType: 'page', children: [] },
-  { id: '2', path: '/en/about', label: 'About', href: '/about', documentType: 'page', children: [] },
+  {
+    id: '2',
+    path: '/en/about',
+    label: 'About',
+    href: '/about',
+    documentType: 'page',
+    children: [],
+  },
 ]
 
 const mockNavigation: Navigation = {
