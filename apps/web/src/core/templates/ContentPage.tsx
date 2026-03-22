@@ -1,12 +1,27 @@
+import type { Page } from '@skeleton-fe/sdk-elastic'
+
+import { BlockRenderer } from '@/core/components/content/BlockRenderer'
+import { Breadcrumbs, buildBreadcrumbsFromPath } from '@/core/components/shared/Breadcrumbs'
 import type { TemplateProps } from '@/lib/types'
 
-export default function ContentPage({ locale, sitePrefix, route }: TemplateProps) {
+export default function ContentPage({ data }: TemplateProps) {
+  const page = data as Page
+
+  const breadcrumbs = buildBreadcrumbsFromPath(page.path)
+
   return (
-    <main className="flex min-h-screen flex-col p-24">
-      <h1 className="text-4xl font-bold">Content Page</h1>
-      <p className="mt-4 text-muted-foreground">
-        site: {sitePrefix} · locale: {locale} · sourceId: {route.sourceId}
-      </p>
-    </main>
+    <section className="min-h-screen">
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <nav aria-label="Breadcrumb" className="mb-6">
+          <Breadcrumbs items={breadcrumbs} />
+        </nav>
+        <h1 className="text-3xl font-bold tracking-tight">{page.title}</h1>
+        {page.editables.length > 0 && (
+          <div className="mt-8">
+            <BlockRenderer blocks={page.editables} />
+          </div>
+        )}
+      </div>
+    </section>
   )
 }
