@@ -1,9 +1,11 @@
+import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 import { MainLayout } from '@/core/layouts/MainLayout'
+import { buildMetadata } from '@/core/components/shared/SEOHead'
 import { resolveComponent } from '@/lib/component-resolver'
-import { getElasticClient } from '@/lib/elastic-client'
+import { fetchPageData } from '@/lib/data-fetching'
 import { fetchMainNavigation } from '@/lib/navigation'
 import { parseMiddlewareHeaders } from '@/lib/types'
 import type { RouteInfo } from '@/lib/types'
@@ -19,12 +21,57 @@ function deriveSiteName(sitePrefix: string): string {
     .join(' ')
 }
 
+function parseRouteInfo(routeJson: string): RouteInfo | null {
+  try {
+    return JSON.parse(routeJson) as RouteInfo
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Generates Next.js Metadata for the current page by reusing cached data
+ * from fetchPageData — avoids duplicate Elasticsearch calls.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers()
+  const parsed = parseMiddlewareHeaders(headersList)
+
+  if (!parsed) {
+    return {}
+  }
+
+  const { sitePrefix, locale, route: routeJson } = parsed
+  const routeInfo = parseRouteInfo(routeJson)
+
+  if (!routeInfo) {
+    return {}
+  }
+
+  const data = await fetchPageData(sitePrefix, locale, routeInfo)
+
+  if (!data) {
+    return {}
+  }
+
+  // Page has title+description; Article has name+metaDescription
+  if ('title' in data) {
+    return buildMetadata({ title: data.title, description: data.description || undefined })
+  }
+
+  return buildMetadata({
+    title: data.name ?? '',
+    description: data.metaDescription ?? undefined,
+  })
+}
+
 /**
  * Catch-all Server Component.
  *
  * Reads the x-* headers set by middleware, fetches page/article data from
- * Elasticsearch via the SDK, resolves the correct template component
- * (with site-override support), and renders it wrapped in MainLayout.
+ * Elasticsearch via the SDK (shared with generateMetadata via React.cache),
+ * resolves the correct template component (with site-override support),
+ * and renders it wrapped in MainLayout.
  */
 export default async function CatchAllPage() {
   const headersList = await headers()
@@ -37,21 +84,14 @@ export default async function CatchAllPage() {
 
   const { sitePrefix, locale, route: routeJson, template } = parsed
 
-  let routeInfo: RouteInfo
-  try {
-    routeInfo = JSON.parse(routeJson) as RouteInfo
-  } catch {
+  const routeInfo = parseRouteInfo(routeJson)
+  if (!routeInfo) {
     notFound()
   }
 
-  // Fetch page data and navigation in parallel
-  const es = getElasticClient()
-  const sourceId = String(routeInfo.sourceId)
-
+  // Fetch page data (deduplicated with generateMetadata via React.cache) and navigation in parallel
   const [data, navigationNodes] = await Promise.all([
-    routeInfo.sourceType === 'document'
-      ? es.pages.findById(sitePrefix, locale, sourceId)
-      : es.articles.findById(sitePrefix, locale, sourceId),
+    fetchPageData(sitePrefix, locale, routeInfo),
     fetchMainNavigation(sitePrefix),
   ])
 
