@@ -1,5 +1,6 @@
-import type { RouteTranslationLink } from './types'
 import type { TranslationLink } from '@/core/components/layout'
+
+import type { RouteTranslationLink } from './types'
 
 /**
  * Builds a locale-aware URL.

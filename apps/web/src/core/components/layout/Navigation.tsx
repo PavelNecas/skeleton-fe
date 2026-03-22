@@ -23,10 +23,7 @@ function NavigationNodeItem({ node, currentLocale, defaultLocale }: NavigationNo
   return (
     <li>
       {href ? (
-        <Link
-          href={href}
-          className="block px-3 py-2 text-sm hover:text-primary transition-colors"
-        >
+        <Link href={href} className="block px-3 py-2 text-sm hover:text-primary transition-colors">
           {label}
         </Link>
       ) : (

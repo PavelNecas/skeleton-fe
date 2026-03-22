@@ -9,10 +9,12 @@ vi.mock('next/headers', () => ({
         const map: Record<string, string> = {
           'x-site-prefix': 'skeleton_localhost',
           'x-locale': 'cs',
+          'x-default-locale': 'cs',
           'x-route': JSON.stringify({
             sourceId: 1,
             sourceType: 'document',
             controllerTemplate: 'CmsModule:ContentPage',
+            translationLinks: [],
           }),
           'x-template': 'CmsModule:ContentPage',
         }
@@ -44,6 +46,11 @@ vi.mock('@/lib/data-fetching', () => ({
 // Mock navigation fetching
 vi.mock('@/lib/navigation', () => ({
   fetchMainNavigation: vi.fn().mockResolvedValue([]),
+}))
+
+// Mock site config to avoid dynamic import side effects
+vi.mock('@/lib/site-config', () => ({
+  loadSiteConfig: vi.fn().mockResolvedValue({ name: 'Skeleton Localhost' }),
 }))
 
 // Mock component resolver to return a simple stub component

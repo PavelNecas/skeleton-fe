@@ -109,6 +109,7 @@ describe('resolveRoute', () => {
   it('defaults translationLinks to empty array when not present in ES route', async () => {
     const routeWithoutLinks = makeRoute()
     // Remove translationLinks to simulate older ES document
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { translationLinks: _tl, ...routeNoLinks } = routeWithoutLinks
     mockEsSearchOne.mockResolvedValueOnce(routeNoLinks)
 

@@ -33,6 +33,7 @@ const mockRoute: RouteInfo = {
   sourceId: 10,
   sourceType: 'object',
   controllerTemplate: 'CmsModule:ContentArticles',
+  translationLinks: [],
 }
 
 const mockArticle: Article = {

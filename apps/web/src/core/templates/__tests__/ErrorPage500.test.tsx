@@ -16,6 +16,7 @@ const mockRoute: RouteInfo = {
   sourceId: 0,
   sourceType: 'document',
   controllerTemplate: 'CmsModule:ErrorPage500',
+  translationLinks: [],
 }
 
 const mockPage = {

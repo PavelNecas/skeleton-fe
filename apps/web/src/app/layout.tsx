@@ -19,7 +19,11 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const headersList = await headers()
   const sitePrefix = headersList.get('x-site-prefix')
 
-  const theme = sitePrefix ? (await loadSiteConfig(sitePrefix)).theme ?? 'default' : 'default'
+  let theme = 'default'
+  if (sitePrefix) {
+    const siteConfig = await loadSiteConfig(sitePrefix)
+    theme = siteConfig.theme ?? 'default'
+  }
 
   return (
     <html lang="en" data-theme={theme}>

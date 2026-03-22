@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest'
 
-import { buildLocalizedUrl, buildTranslationUrls, buildHreflangLinks, buildNavigationUrl } from '../url'
+import {
+  buildLocalizedUrl,
+  buildTranslationUrls,
+  buildHreflangLinks,
+  buildNavigationUrl,
+} from '../url'
 
 const DEFAULT_LOCALE = 'cs'
 

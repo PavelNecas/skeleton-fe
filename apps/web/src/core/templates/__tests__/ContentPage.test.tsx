@@ -33,6 +33,7 @@ const mockRoute: RouteInfo = {
   sourceId: 2,
   sourceType: 'document',
   controllerTemplate: 'CmsModule:ContentPage',
+  translationLinks: [],
 }
 
 const mockPage: Page = {
