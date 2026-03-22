@@ -1,0 +1,17 @@
+/**
+ * Example site theme — overrides shadcn/ui CSS variables.
+ * Loaded when site config has theme: 'example'.
+ * Applied via data-theme="example" on the <html> element.
+ */
+[data-theme='example'] {
+  --primary: 142 76% 36%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 142 30% 92%;
+  --secondary-foreground: 142 76% 20%;
+
+  --accent: 142 50% 88%;
+  --accent-foreground: 142 76% 20%;
+
+  --radius: 0.25rem;
+}

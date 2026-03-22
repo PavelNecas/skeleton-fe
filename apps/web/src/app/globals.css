@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Per-site theme overrides — loaded after base variables so they take precedence */
+@import '../styles/themes/default.css';
+@import '../styles/themes/example.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;
