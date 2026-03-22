@@ -44,3 +44,73 @@ export async function resolveComponent(
 
   return null
 }
+
+/**
+ * Resolves a layout component for the given layoutName and sitePrefix.
+ *
+ * Resolution order:
+ * 1. Try site-specific override: `@/sites/{sitePrefix}/layouts/{layoutName}`
+ * 2. Fall back to core layout: `@/core/layouts/{layoutName}`
+ * 3. Return null if neither exists.
+ */
+export async function resolveLayoutComponent<T>(
+  layoutName: string,
+  sitePrefix: string,
+): Promise<ComponentType<T> | null> {
+  // 1. Try site override
+  try {
+    const mod = (await import(`@/sites/${sitePrefix}/layouts/${layoutName}`)) as {
+      default: ComponentType<T>
+    }
+    return mod.default
+  } catch {
+    // Site override does not exist — fall through
+  }
+
+  // 2. Try core layout
+  try {
+    const mod = (await import(`@/core/layouts/${layoutName}`)) as {
+      default: ComponentType<T>
+    }
+    return mod.default
+  } catch {
+    // Core layout does not exist either
+  }
+
+  return null
+}
+
+/**
+ * Resolves a generic site component by component path (e.g. "layout/Header").
+ *
+ * Resolution order:
+ * 1. Try site-specific override: `@/sites/{sitePrefix}/components/{componentPath}`
+ * 2. Fall back to core component: `@/core/components/{componentPath}`
+ * 3. Return null if neither exists.
+ */
+export async function resolveSiteComponent<T>(
+  componentPath: string,
+  sitePrefix: string,
+): Promise<ComponentType<T> | null> {
+  // 1. Try site override
+  try {
+    const mod = (await import(`@/sites/${sitePrefix}/components/${componentPath}`)) as {
+      default: ComponentType<T>
+    }
+    return mod.default
+  } catch {
+    // Site override does not exist — fall through
+  }
+
+  // 2. Try core component
+  try {
+    const mod = (await import(`@/core/components/${componentPath}`)) as {
+      default: ComponentType<T>
+    }
+    return mod.default
+  } catch {
+    // Core component does not exist either
+  }
+
+  return null
+}
