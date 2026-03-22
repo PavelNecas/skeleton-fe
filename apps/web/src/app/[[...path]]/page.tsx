@@ -1,17 +1,30 @@
 import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 
+import { MainLayout } from '@/core/layouts/MainLayout'
 import { resolveComponent } from '@/lib/component-resolver'
 import { getElasticClient } from '@/lib/elastic-client'
+import { fetchMainNavigation } from '@/lib/navigation'
 import { parseMiddlewareHeaders } from '@/lib/types'
 import type { RouteInfo } from '@/lib/types'
+
+/**
+ * Derives a human-readable site name from the site prefix.
+ * e.g. "my_site" → "My site"
+ */
+function deriveSiteName(sitePrefix: string): string {
+  return sitePrefix
+    .split('_')
+    .map((part, index) => (index === 0 ? part.charAt(0).toUpperCase() + part.slice(1) : part))
+    .join(' ')
+}
 
 /**
  * Catch-all Server Component.
  *
  * Reads the x-* headers set by middleware, fetches page/article data from
  * Elasticsearch via the SDK, resolves the correct template component
- * (with site-override support), and renders it.
+ * (with site-override support), and renders it wrapped in MainLayout.
  */
 export default async function CatchAllPage() {
   const headersList = await headers()
@@ -31,14 +44,16 @@ export default async function CatchAllPage() {
     notFound()
   }
 
-  // Fetch page data from the appropriate ES index
+  // Fetch page data and navigation in parallel
   const es = getElasticClient()
   const sourceId = String(routeInfo.sourceId)
 
-  const data =
+  const [data, navigationNodes] = await Promise.all([
     routeInfo.sourceType === 'document'
-      ? await es.pages.findById(sitePrefix, locale, sourceId)
-      : await es.articles.findById(sitePrefix, locale, sourceId)
+      ? es.pages.findById(sitePrefix, locale, sourceId)
+      : es.articles.findById(sitePrefix, locale, sourceId),
+    fetchMainNavigation(sitePrefix),
+  ])
 
   if (!data) {
     notFound()
@@ -51,5 +66,16 @@ export default async function CatchAllPage() {
     notFound()
   }
 
-  return <Template data={data} route={routeInfo} locale={locale} sitePrefix={sitePrefix} />
+  const siteName = deriveSiteName(sitePrefix)
+
+  return (
+    <MainLayout
+      navigationNodes={navigationNodes}
+      siteName={siteName}
+      currentLocale={locale}
+      translationLinks={[]}
+    >
+      <Template data={data} route={routeInfo} locale={locale} sitePrefix={sitePrefix} />
+    </MainLayout>
+  )
 }
