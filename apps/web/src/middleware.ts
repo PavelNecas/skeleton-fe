@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
+import { handleAuthMiddleware } from './lib/auth/middleware'
 import { detectLocale } from './lib/locale'
 import { resolveRoute } from './lib/route-resolver'
 import { resolveSite } from './lib/site-resolver'
@@ -17,12 +18,24 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // 2. Locale detection
   const { locale, resolvedPath } = detectLocale(pathname, site.availableLocales, site.defaultLocale)
 
-  // 3. Route resolution
+  // 3. Auth check (skip /login and /api/ paths)
+  if (!pathname.startsWith('/login') && !pathname.startsWith('/api/')) {
+    const authResponse = await handleAuthMiddleware(request)
+    if (authResponse !== null) {
+      return authResponse
+    }
+  }
+
+  // 4. Route resolution (skip for /login pages)
+  if (pathname.startsWith('/login')) {
+    return NextResponse.next()
+  }
+
   const routeResult = await resolveRoute(site.prefix, resolvedPath, locale)
 
   if (routeResult.kind === 'redirect') {
     // Reconstruct the canonical URL with locale prefix if needed
-    const canonicalPath =
+    const canonicalPath: string =
       locale !== site.defaultLocale
         ? `/${locale}${routeResult.destination}`
         : routeResult.destination
@@ -47,7 +60,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     })
   }
 
-  // 4. Build route info header
+  // 5. Build route info header
   const routeInfo: RouteInfo = {
     sourceId: routeResult.sourceId,
     sourceType: routeResult.sourceType,
