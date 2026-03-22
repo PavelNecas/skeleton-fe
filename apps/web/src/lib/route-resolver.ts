@@ -1,5 +1,11 @@
 import { esSearchOne } from './elastic-edge'
 
+export interface EsTranslationLink {
+  locale: string
+  sourceId: number
+  path: string
+}
+
 interface EsRoute {
   sourceId: number
   sourceType: string
@@ -12,6 +18,7 @@ interface EsRoute {
   redirect: string
   redirectCode: string
   aliases: Array<{ path: string }>
+  translationLinks?: EsTranslationLink[]
 }
 
 export interface RouteResolution {
@@ -20,6 +27,7 @@ export interface RouteResolution {
   sourceType: string
   controllerTemplate: string
   path: string
+  translationLinks: EsTranslationLink[]
 }
 
 export interface RedirectResolution {
@@ -66,6 +74,7 @@ export async function resolveRoute(
       sourceType: route.sourceType,
       controllerTemplate: route.controllerTemplate,
       path: route.path,
+      translationLinks: route.translationLinks ?? [],
     }
   }
 

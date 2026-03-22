@@ -25,7 +25,7 @@ export type {
 
 // Index classes and interfaces
 export { RoutesIndex } from './indices/routes'
-export type { Route, RouteAlias } from './indices/routes'
+export type { Route, RouteAlias, TranslationLink as RouteTranslationLink } from './indices/routes'
 
 export { SitesIndex } from './indices/sites'
 export type { Site, LocalizedErrorDocument } from './indices/sites'

@@ -53,6 +53,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       headers: {
         'x-site-prefix': site.prefix,
         'x-locale': locale,
+        'x-default-locale': site.defaultLocale,
         'x-route': '{}',
         'x-template': '',
         'x-not-found': '1',
@@ -65,6 +66,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     sourceId: routeResult.sourceId,
     sourceType: routeResult.sourceType,
     controllerTemplate: routeResult.controllerTemplate,
+    translationLinks: routeResult.translationLinks,
   }
 
   const templateName =
@@ -76,6 +78,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     headers: {
       'x-site-prefix': site.prefix,
       'x-locale': locale,
+      'x-default-locale': site.defaultLocale,
       'x-route': JSON.stringify(routeInfo),
       'x-template': templateName,
     },

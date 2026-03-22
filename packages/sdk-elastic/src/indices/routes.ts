@@ -4,6 +4,12 @@ export interface RouteAlias {
   path: string
 }
 
+export interface TranslationLink {
+  locale: string
+  sourceId: number
+  path: string
+}
+
 export interface Route {
   sourceId: number
   sourceType: string
@@ -16,6 +22,7 @@ export interface Route {
   redirect: string
   redirectCode: string
   aliases: RouteAlias[]
+  translationLinks: TranslationLink[]
   modificationDate: number
   creationDate: number
 }

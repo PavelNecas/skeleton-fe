@@ -32,6 +32,7 @@ const makeRoute = (overrides?: Partial<Record<string, unknown>>) => ({
   redirect: '',
   redirectCode: '',
   aliases: [],
+  translationLinks: [],
   ...overrides,
 })
 
@@ -47,6 +48,7 @@ describe('resolveRoute', () => {
       sourceType: 'document',
       controllerTemplate: 'CmsModule:ContentPage',
       path: '/about-us',
+      translationLinks: [],
     })
   })
 
@@ -90,5 +92,31 @@ describe('resolveRoute', () => {
 
     const result = await resolveRoute(SITE_PREFIX, '/', LOCALE)
     expect(result.kind).toBe('route')
+  })
+
+  it('includes translationLinks from ES route in RouteResolution', async () => {
+    const translationLinks = [{ locale: 'en', sourceId: 78, path: '/about-us' }]
+    mockEsSearchOne.mockResolvedValueOnce(makeRoute({ translationLinks }))
+
+    const result = await resolveRoute(SITE_PREFIX, '/about-us', LOCALE)
+
+    expect(result.kind).toBe('route')
+    if (result.kind === 'route') {
+      expect(result.translationLinks).toEqual(translationLinks)
+    }
+  })
+
+  it('defaults translationLinks to empty array when not present in ES route', async () => {
+    const routeWithoutLinks = makeRoute()
+    // Remove translationLinks to simulate older ES document
+    const { translationLinks: _tl, ...routeNoLinks } = routeWithoutLinks
+    mockEsSearchOne.mockResolvedValueOnce(routeNoLinks)
+
+    const result = await resolveRoute(SITE_PREFIX, '/about-us', LOCALE)
+
+    expect(result.kind).toBe('route')
+    if (result.kind === 'route') {
+      expect(result.translationLinks).toEqual([])
+    }
   })
 })
