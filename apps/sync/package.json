@@ -1,0 +1,13 @@
+{
+  "name": "@skeleton-fe/sync",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "tsc --build",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@skeleton-fe/config": "workspace:*",
+    "typescript": "^5.7.0"
+  }
+}
