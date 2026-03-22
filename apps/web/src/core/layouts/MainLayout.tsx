@@ -8,7 +8,9 @@ export interface MainLayoutProps {
   siteName: string
   navigationNodes: NavigationNode[]
   currentLocale: string
+  defaultLocale: string
   translationLinks: TranslationLink[]
+  theme?: string
 }
 
 export function MainLayout({

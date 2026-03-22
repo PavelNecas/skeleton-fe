@@ -9,6 +9,7 @@ import { fetchPageData } from '@/lib/data-fetching'
 import { fetchMainNavigation } from '@/lib/navigation'
 import { parseMiddlewareHeaders } from '@/lib/types'
 import type { RouteInfo } from '@/lib/types'
+import { buildTranslationUrls, buildHreflangLinks } from '@/lib/url'
 
 /**
  * Derives a human-readable site name from the site prefix.
@@ -41,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     return {}
   }
 
-  const { sitePrefix, locale, route: routeJson } = parsed
+  const { sitePrefix, locale, defaultLocale, route: routeJson } = parsed
   const routeInfo = parseRouteInfo(routeJson)
 
   if (!routeInfo) {
@@ -54,14 +55,29 @@ export async function generateMetadata(): Promise<Metadata> {
     return {}
   }
 
+  // Build hreflang links from translation data
+  const hreflangLinks = buildHreflangLinks(
+    routeInfo.translationLinks?.find((l) => l.locale === locale)?.path ??
+      headersList.get('x-pathname') ??
+      '/',
+    locale,
+    defaultLocale,
+    routeInfo.translationLinks ?? [],
+  )
+
   // Page has title+description; Article has name+metaDescription
   if ('title' in data) {
-    return buildMetadata({ title: data.title, description: data.description || undefined })
+    return buildMetadata({
+      title: data.title,
+      description: data.description || undefined,
+      hreflangLinks,
+    })
   }
 
   return buildMetadata({
     title: data.name ?? '',
     description: data.metaDescription ?? undefined,
+    hreflangLinks,
   })
 }
 
@@ -82,7 +98,7 @@ export default async function CatchAllPage() {
     notFound()
   }
 
-  const { sitePrefix, locale, route: routeJson, template } = parsed
+  const { sitePrefix, locale, defaultLocale, route: routeJson, template } = parsed
 
   const routeInfo = parseRouteInfo(routeJson)
   if (!routeInfo) {
@@ -108,12 +124,21 @@ export default async function CatchAllPage() {
 
   const siteName = deriveSiteName(sitePrefix)
 
+  // Build locale-aware translation links for LanguageSwitcher
+  const translationLinks = buildTranslationUrls(
+    routeInfo.translationLinks?.find((l) => l.locale === locale)?.path ?? '/',
+    locale,
+    defaultLocale,
+    routeInfo.translationLinks ?? [],
+  )
+
   return (
     <MainLayout
       navigationNodes={navigationNodes}
       siteName={siteName}
       currentLocale={locale}
-      translationLinks={[]}
+      defaultLocale={defaultLocale}
+      translationLinks={translationLinks}
     >
       <Template data={data} route={routeInfo} locale={locale} sitePrefix={sitePrefix} />
     </MainLayout>
