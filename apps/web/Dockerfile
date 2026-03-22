@@ -8,6 +8,7 @@ WORKDIR /app
 # Copy workspace manifests
 COPY pnpm-workspace.yaml ./
 COPY package.json ./
+COPY pnpm-lock.yaml ./
 COPY .npmrc ./
 
 # Copy package manifests for all workspaces
@@ -28,8 +29,7 @@ RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
 WORKDIR /app
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
+COPY --from=deps /app ./
 
 COPY . .
 

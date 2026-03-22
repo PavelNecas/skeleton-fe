@@ -7,7 +7,7 @@
     },
     "lint": {},
     "type-check": {},
-    "test": {},
+    "test": { "dependsOn": ["^build"] },
     "test:e2e": {},
     "dev": {
       "persistent": true,
