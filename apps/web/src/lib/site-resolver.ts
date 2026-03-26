@@ -11,6 +11,8 @@ export interface SiteConfig {
 interface EsSite {
   id: number
   mainDomain: string
+  defaultLocale: string
+  availableLocales: string[]
 }
 
 interface CacheEntry {
@@ -18,6 +20,7 @@ interface CacheEntry {
   expiresAt: number
 }
 
+const SITES_INDEX = 'app_sites'
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 const siteCache = new Map<string, CacheEntry>()
 
@@ -32,7 +35,7 @@ function hostnameToPrefix(hostname: string): string {
 /**
  * Resolves site configuration for a given hostname.
  * Queries the ES sites index and caches results for 5 minutes.
- * Falls back to environment variables when ES returns no data or a field is absent.
+ * Site prefix is derived from hostname; locale config comes from ES.
  */
 export async function resolveSite(hostname: string): Promise<SiteConfig> {
   const now = Date.now()
@@ -41,37 +44,36 @@ export async function resolveSite(hostname: string): Promise<SiteConfig> {
     return cached.config
   }
 
-  const sitePrefix = process.env.SITE_PREFIX ?? hostnameToPrefix(hostname)
-  const defaultLocale = process.env.DEFAULT_LOCALE ?? 'cs'
-  const availableLocales = (process.env.AVAILABLE_LOCALES ?? defaultLocale)
-    .split(',')
-    .map((l) => l.trim())
-    .filter(Boolean)
+  const sitePrefix = hostnameToPrefix(hostname)
 
   let config: SiteConfig
 
   try {
-    const site = await esSearchOne<EsSite>(`${sitePrefix}_sites`, {
+    const site = await esSearchOne<EsSite>(SITES_INDEX, {
       query: {
         term: { mainDomain: hostname },
       },
     })
 
+    if (!site) {
+      throw new Error(`No site found for hostname: ${hostname}`)
+    }
+
     config = {
-      id: site?.id ?? 0,
+      id: site.id,
       prefix: sitePrefix,
-      mainDomain: site?.mainDomain ?? hostname,
-      defaultLocale,
-      availableLocales,
+      mainDomain: site.mainDomain,
+      defaultLocale: site.defaultLocale,
+      availableLocales: site.availableLocales,
     }
   } catch {
-    // ES not available — use env-based defaults
+    // ES not available — use sensible defaults
     config = {
       id: 0,
       prefix: sitePrefix,
       mainDomain: hostname,
-      defaultLocale,
-      availableLocales,
+      defaultLocale: 'cs',
+      availableLocales: ['cs'],
     }
   }
 

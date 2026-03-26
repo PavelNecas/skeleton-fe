@@ -9,55 +9,62 @@ vi.mock('../elastic-edge', () => ({
 
 const mockEsSearchOne = vi.mocked(esSearchOne)
 
+const FULL_ES_SITE = {
+  id: 1,
+  mainDomain: 'skeleton-fe.localhost',
+  defaultLocale: 'cs',
+  availableLocales: ['cs', 'en'],
+}
+
 beforeEach(() => {
   clearSiteCache()
-  vi.stubEnv('SITE_PREFIX', 'skeleton_localhost')
-  vi.stubEnv('DEFAULT_LOCALE', 'cs')
-  vi.stubEnv('AVAILABLE_LOCALES', 'cs,en')
 })
 
 afterEach(() => {
-  vi.unstubAllEnvs()
   vi.clearAllMocks()
 })
 
 describe('resolveSite', () => {
-  it('returns site config from ES with env locale fallbacks', async () => {
-    mockEsSearchOne.mockResolvedValueOnce({ id: 1, mainDomain: 'skeleton-fe.localhost' })
+  it('returns site config from ES including locales', async () => {
+    mockEsSearchOne.mockResolvedValueOnce(FULL_ES_SITE)
 
     const config = await resolveSite('skeleton-fe.localhost')
 
+    expect(mockEsSearchOne).toHaveBeenCalledWith('app_sites', {
+      query: { term: { mainDomain: 'skeleton-fe.localhost' } },
+    })
     expect(config).toEqual({
       id: 1,
-      prefix: 'skeleton_localhost',
+      prefix: 'skeleton_fe_localhost',
       mainDomain: 'skeleton-fe.localhost',
       defaultLocale: 'cs',
       availableLocales: ['cs', 'en'],
     })
   })
 
-  it('uses env defaults when ES returns null', async () => {
+  it('falls back to defaults when ES returns null', async () => {
     mockEsSearchOne.mockResolvedValueOnce(null)
 
     const config = await resolveSite('skeleton-fe.localhost')
 
     expect(config.id).toBe(0)
-    expect(config.prefix).toBe('skeleton_localhost')
+    expect(config.prefix).toBe('skeleton_fe_localhost')
     expect(config.defaultLocale).toBe('cs')
-    expect(config.availableLocales).toEqual(['cs', 'en'])
+    expect(config.availableLocales).toEqual(['cs'])
   })
 
-  it('falls back to env defaults when ES throws', async () => {
+  it('falls back to defaults when ES throws', async () => {
     mockEsSearchOne.mockRejectedValueOnce(new Error('ES unavailable'))
 
     const config = await resolveSite('skeleton-fe.localhost')
 
-    expect(config.prefix).toBe('skeleton_localhost')
+    expect(config.prefix).toBe('skeleton_fe_localhost')
     expect(config.defaultLocale).toBe('cs')
+    expect(config.availableLocales).toEqual(['cs'])
   })
 
   it('caches the result and does not call ES again', async () => {
-    mockEsSearchOne.mockResolvedValue({ id: 2, mainDomain: 'skeleton-fe.localhost' })
+    mockEsSearchOne.mockResolvedValue(FULL_ES_SITE)
 
     await resolveSite('skeleton-fe.localhost')
     await resolveSite('skeleton-fe.localhost')
@@ -65,10 +72,7 @@ describe('resolveSite', () => {
     expect(mockEsSearchOne).toHaveBeenCalledOnce()
   })
 
-  it('derives prefix from hostname when SITE_PREFIX env is not set', async () => {
-    vi.unstubAllEnvs()
-    vi.stubEnv('DEFAULT_LOCALE', 'cs')
-    vi.stubEnv('AVAILABLE_LOCALES', 'cs')
+  it('derives prefix from hostname', async () => {
     mockEsSearchOne.mockResolvedValueOnce(null)
 
     const config = await resolveSite('my-site.example.com')

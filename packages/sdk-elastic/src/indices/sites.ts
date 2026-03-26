@@ -7,13 +7,15 @@ export interface LocalizedErrorDocument {
 
 export interface Site {
   id: number
-  domains: string
+  domains: string[]
   rootId: number
   rootPath: string
   mainDomain: string
   errorDocument: string
   localizedErrorDocuments: LocalizedErrorDocument[]
   redirectToMainDomain: boolean
+  defaultLocale: string
+  availableLocales: string[]
   modificationDate: number
   creationDate: number
 }
@@ -21,20 +23,18 @@ export interface Site {
 export class SitesIndex {
   constructor(private readonly client: ElasticClient) {}
 
-  private indexName(sitePrefix: string): string {
-    return `${sitePrefix}_sites`
-  }
+  private readonly indexName = 'app_sites'
 
-  async findByDomain(sitePrefix: string, domain: string): Promise<Site | null> {
-    return this.client.searchOne<Site>(this.indexName(sitePrefix), {
+  async findByDomain(domain: string): Promise<Site | null> {
+    return this.client.searchOne<Site>(this.indexName, {
       query: {
         term: { mainDomain: domain },
       },
     })
   }
 
-  async getAll(sitePrefix: string): Promise<Site[]> {
-    return this.client.search<Site>(this.indexName(sitePrefix), {
+  async getAll(): Promise<Site[]> {
+    return this.client.search<Site>(this.indexName, {
       query: {
         match_all: {},
       },

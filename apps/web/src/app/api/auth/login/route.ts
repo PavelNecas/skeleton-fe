@@ -29,7 +29,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   try {
     const pimcoreClient = new PimcoreClient({
-      baseUrl: process.env.PIMCORE_API_URL ?? 'http://pimcore',
+      baseUrl: process.env.PIMCORE_API_URL!,
     })
     const authClient = new AuthClient(pimcoreClient)
     const tokens = await authClient.login(parsed.data)

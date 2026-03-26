@@ -9,7 +9,7 @@ services:
       - .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.skeleton-fe.rule=Host(`skeleton-fe.localhost`)"
+      - "traefik.http.routers.skeleton-fe.rule=Host(`skeleton-fe.localhost`) || Host(`skeleton-com.localhost`)"
       - "traefik.http.services.skeleton-fe.loadbalancer.server.port=3000"
     networks:
       - skeleton-net
