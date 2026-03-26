@@ -19,7 +19,10 @@ export async function resolveComponent(
   controllerTemplate: string,
   sitePrefix: string,
 ): Promise<TemplateComponent | null> {
-  const componentName = controllerTemplate.split(':').pop()
+  const segments = controllerTemplate.split(':')
+  // Pimcore format: "Cms:Homepage:default" → take the action segment (middle)
+  // Legacy format: "CmsModule:Homepage" → take the last segment
+  const componentName = segments.length >= 3 ? segments[1] : segments.pop()
   if (!componentName) return null
 
   // 1. Try site override
