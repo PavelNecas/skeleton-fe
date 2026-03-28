@@ -1,1 +1,11 @@
 .claude/temp/
+node_modules/
+.next/
+dist/
+.turbo/
+.env
+.env.local
+*.tsbuildinfo
+coverage/
+playwright-report/
+test-results/

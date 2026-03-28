@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: skeleton-fe
+    restart: unless-stopped
+    env_file:
+      - .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.skeleton-fe.rule=Host(`skeleton-fe.localhost`) || Host(`skeleton-com.localhost`)"
+      - "traefik.http.services.skeleton-fe.loadbalancer.server.port=3000"
+    networks:
+      - skeleton-net
+
+networks:
+  skeleton-net:
+    external: true

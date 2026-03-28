@@ -78,7 +78,7 @@ const templateMap: Record<string, ComponentType> = {
 | Root homepage (default) | `/` | cs |
 | Root homepage (secondary) | `/en` | en |
 
-**Default locale is defined per-site** in the sites ES index (`defaultLocale` field). Until this field is available on backend, use `DEFAULT_LOCALE` env variable as fallback.
+**Default locale and available locales are defined per-site** in the ES sites index (`defaultLocale`, `availableLocales` fields).
 
 ## Route Data (from ES routes index)
 

@@ -71,9 +71,8 @@ PIMCORE_API_URL=http://skeleton.localhost
 PIMCORE_CLIENT_ID=
 PIMCORE_CLIENT_SECRET=
 
-# Site (fallback until defaultLocale is in ES sites index)
-DEFAULT_LOCALE=cs
-AVAILABLE_LOCALES=cs,en
+# Site configuration is resolved from ES sites index automatically.
+# Site prefix is derived from hostname (e.g. skeleton-fe.localhost → skeleton_fe_localhost).
 
 # Next.js
 NEXT_PUBLIC_SITE_URL=http://skeleton-fe.localhost

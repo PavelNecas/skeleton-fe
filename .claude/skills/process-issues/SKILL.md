@@ -40,7 +40,7 @@ You are an autonomous issue-processing agent. When invoked, you fetch open GitHu
 
 ## Processing Loop
 
-You always have **up to 2 issues running in parallel**. The total processed per invocation is capped at **6 issues**.
+You always have **up to 2 issues running in parallel**. The total processed per invocation is capped at **10 issues**.
 
 **How it works:**
 1. Pick the first 2 issues from the queue and start processing them in parallel (run their Per-Issue Workflow steps A–I).
