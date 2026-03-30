@@ -58,11 +58,14 @@ export async function resolveRoute(
 ): Promise<RouteResult> {
   const index = `${sitePrefix}_routes`
 
+  // ES stores paths without leading slash (except homepage "/")
+  const esPath = path === '/' ? '/' : path.replace(/^\//, '')
+
   // 1. Direct path lookup
   const route = await esSearchOne<EsRoute>(index, {
     query: {
       bool: {
-        must: [{ term: { path } }, { term: { published: true } }],
+        must: [{ term: { path: esPath } }, { term: { published: true } }],
       },
     },
   })
@@ -84,7 +87,7 @@ export async function resolveRoute(
       nested: {
         path: 'aliases',
         query: {
-          term: { 'aliases.path': path },
+          term: { 'aliases.path': esPath },
         },
       },
     },

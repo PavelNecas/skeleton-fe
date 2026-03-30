@@ -7,27 +7,28 @@ type TemplateComponent = ComponentType<TemplateProps>
 /**
  * Resolves the template component for the given controllerTemplate and sitePrefix.
  *
- * Resolution order:
- * 1. Try site-specific override: `@/sites/{sitePrefix}/templates/{ComponentName}`
- * 2. Fall back to core template: `@/core/templates/{ComponentName}`
- * 3. Return null if neither exists.
+ * The controllerTemplate string maps directly to the filesystem path by replacing
+ * ":" with "/". For example: "Cms:Page:default" → "Cms/Page/default".
  *
- * The ComponentName is derived from the last segment of controllerTemplate,
- * e.g. "CmsModule:ContentPage" → "ContentPage".
+ * Resolution order:
+ * 1. Try site-specific override: `@/sites/{sitePrefix}/templates/{path}`
+ * 2. Fall back to core template: `@/core/templates/{path}`
+ * 3. Return null if neither exists.
  */
 export async function resolveComponent(
   controllerTemplate: string,
   sitePrefix: string,
 ): Promise<TemplateComponent | null> {
-  const segments = controllerTemplate.split(':')
-  // Pimcore format: "Cms:Homepage:default" → take the action segment (middle)
-  // Legacy format: "CmsModule:Homepage" → take the last segment
-  const componentName = segments.length >= 3 ? segments[1] : segments.pop()
-  if (!componentName) return null
+  if (!controllerTemplate) return null
+
+  const templatePath = controllerTemplate
+    .split(':')
+    .map(s => s.charAt(0).toUpperCase() + s.slice(1))
+    .join('/')
 
   // 1. Try site override
   try {
-    const mod = (await import(`@/sites/${sitePrefix}/templates/${componentName}`)) as {
+    const mod = (await import(`@/sites/${sitePrefix}/templates/${templatePath}`)) as {
       default: TemplateComponent
     }
     return mod.default
@@ -37,7 +38,7 @@ export async function resolveComponent(
 
   // 2. Try core template
   try {
-    const mod = (await import(`@/core/templates/${componentName}`)) as {
+    const mod = (await import(`@/core/templates/${templatePath}`)) as {
       default: TemplateComponent
     }
     return mod.default

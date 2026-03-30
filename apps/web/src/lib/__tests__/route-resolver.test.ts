@@ -24,7 +24,7 @@ const makeRoute = (overrides?: Partial<Record<string, unknown>>) => ({
   sourceId: 42,
   sourceType: 'document',
   objectType: 'page',
-  controllerTemplate: 'CmsModule:ContentPage',
+  controllerTemplate: 'Cms:Page:default',
   uid: 'abc',
   path: '/about-us',
   site: SITE_PREFIX,
@@ -46,7 +46,7 @@ describe('resolveRoute', () => {
       kind: 'route',
       sourceId: 42,
       sourceType: 'document',
-      controllerTemplate: 'CmsModule:ContentPage',
+      controllerTemplate: 'Cms:Page:default',
       path: '/about-us',
       translationLinks: [],
     })

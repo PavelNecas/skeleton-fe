@@ -10,12 +10,12 @@ vi.mock('next/link', () => ({
 
 import type { RouteInfo, TemplateProps } from '@/lib/types'
 
-import ErrorPage404 from '../ErrorPage404'
+import ErrorPage404 from '../Cms/ErrorPage/NotFound'
 
 const mockRoute: RouteInfo = {
   sourceId: 0,
   sourceType: 'document',
-  controllerTemplate: 'CmsModule:ErrorPage404',
+  controllerTemplate: 'Cms:ErrorPage:notFound',
   translationLinks: [],
 }
 

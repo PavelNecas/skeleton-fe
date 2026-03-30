@@ -5,8 +5,7 @@ import { describe, it, expect, vi } from 'vitest'
 // the public contract via module factory patterns.
 
 describe('resolveComponent', () => {
-  it('returns null for controllerTemplate with no component name', async () => {
-    // Avoid side-effects from other tests by importing fresh
+  it('returns null for empty controllerTemplate', async () => {
     const { resolveComponent } = await import('../component-resolver')
     const result = await resolveComponent('', 'skeleton_localhost')
     expect(result).toBeNull()
@@ -15,14 +14,14 @@ describe('resolveComponent', () => {
   it('returns null when neither site override nor core template exists', async () => {
     // Both dynamic imports will naturally throw (module not found)
     const { resolveComponent } = await import('../component-resolver')
-    const result = await resolveComponent('CmsModule:NonExistentWidget', 'unknown_site')
+    const result = await resolveComponent('Cms:NonExistent:default', 'unknown_site')
     expect(result).toBeNull()
   })
 
   it('falls back to core template when site override does not exist', async () => {
-    vi.mock('@/core/templates/ContentPage', () => ({ default: () => null }))
+    vi.mock('@/core/templates/Cms/Page/Default', () => ({ default: () => null }))
     const { resolveComponent } = await import('../component-resolver')
-    const result = await resolveComponent('CmsModule:ContentPage', 'skeleton_localhost')
+    const result = await resolveComponent('Cms:Page:default', 'skeleton_localhost')
     // Core template exists (mocked) → should not be null
     expect(result).not.toBeNull()
   })

@@ -10,12 +10,12 @@ vi.mock('@/core/components/content/BlockRenderer', () => ({
 
 import type { RouteInfo, TemplateProps } from '@/lib/types'
 
-import Homepage from '../Homepage'
+import Homepage from '../Cms/Homepage/Default'
 
 const mockRoute: RouteInfo = {
   sourceId: 1,
   sourceType: 'document',
-  controllerTemplate: 'CmsModule:Homepage',
+  controllerTemplate: 'Cms:Homepage:default',
   translationLinks: [],
 }
 

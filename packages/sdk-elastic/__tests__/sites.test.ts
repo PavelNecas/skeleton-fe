@@ -31,9 +31,9 @@ describe('SitesIndex', () => {
       };
       mockClient.searchOne.mockResolvedValueOnce(mockSite);
 
-      const result = await sitesIndex.findByDomain('skeleton_localhost', 'skeleton.localhost');
+      const result = await sitesIndex.findByDomain('skeleton.localhost');
 
-      expect(mockClient.searchOne).toHaveBeenCalledWith('skeleton_localhost_sites', {
+      expect(mockClient.searchOne).toHaveBeenCalledWith('app_sites', {
         query: {
           term: { mainDomain: 'skeleton.localhost' },
         },
@@ -44,7 +44,7 @@ describe('SitesIndex', () => {
     it('returns null when site not found', async () => {
       mockClient.searchOne.mockResolvedValueOnce(null);
 
-      const result = await sitesIndex.findByDomain('skeleton_localhost', 'unknown.com');
+      const result = await sitesIndex.findByDomain('unknown.com');
 
       expect(result).toBeNull();
     });
@@ -58,9 +58,9 @@ describe('SitesIndex', () => {
       ];
       mockClient.search.mockResolvedValueOnce(mockSites);
 
-      const result = await sitesIndex.getAll('skeleton_localhost');
+      const result = await sitesIndex.getAll();
 
-      expect(mockClient.search).toHaveBeenCalledWith('skeleton_localhost_sites', {
+      expect(mockClient.search).toHaveBeenCalledWith('app_sites', {
         query: { match_all: {} },
       });
       expect(result).toHaveLength(2);

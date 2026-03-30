@@ -5,7 +5,6 @@ import { handleAuthMiddleware } from './lib/auth/middleware'
 import { detectLocale } from './lib/locale'
 import { resolveRoute } from './lib/route-resolver'
 import { resolveSite } from './lib/site-resolver'
-import { getTemplateName } from './lib/template-registry'
 import type { RouteInfo } from './lib/types'
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
@@ -69,8 +68,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     translationLinks: routeResult.translationLinks,
   }
 
-  const templateName =
-    getTemplateName(routeResult.controllerTemplate) ?? routeResult.controllerTemplate
+  const templateName = routeResult.controllerTemplate
 
   // 5. Rewrite with headers so the catch-all page can read them
   const rewriteUrl = request.nextUrl.clone()

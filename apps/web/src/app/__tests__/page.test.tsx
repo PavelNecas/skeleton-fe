@@ -13,10 +13,10 @@ vi.mock('next/headers', () => ({
           'x-route': JSON.stringify({
             sourceId: 1,
             sourceType: 'document',
-            controllerTemplate: 'CmsModule:ContentPage',
+            controllerTemplate: 'Cms:Page:default',
             translationLinks: [],
           }),
-          'x-template': 'CmsModule:ContentPage',
+          'x-template': 'Cms:Page:default',
         }
         return map[key] ?? null
       },

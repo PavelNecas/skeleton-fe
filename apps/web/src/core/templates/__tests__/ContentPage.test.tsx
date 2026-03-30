@@ -27,12 +27,12 @@ vi.mock('next/link', () => ({
 
 import type { RouteInfo, TemplateProps } from '@/lib/types'
 
-import ContentPage from '../ContentPage'
+import ContentPage from '../Cms/Page/Default'
 
 const mockRoute: RouteInfo = {
   sourceId: 2,
   sourceType: 'document',
-  controllerTemplate: 'CmsModule:ContentPage',
+  controllerTemplate: 'Cms:Page:default',
   translationLinks: [],
 }
 
