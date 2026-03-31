@@ -1,4 +1,6 @@
 .claude/temp/
+.claude/worktrees/
+.claude/projects/
 node_modules/
 .next/
 dist/
