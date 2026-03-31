@@ -46,35 +46,22 @@ export async function resolveSite(hostname: string): Promise<SiteConfig> {
 
   const sitePrefix = hostnameToPrefix(hostname)
 
-  let config: SiteConfig
+  const site = await esSearchOne<EsSite>(SITES_INDEX, {
+    query: {
+      term: { mainDomain: hostname },
+    },
+  })
 
-  try {
-    const site = await esSearchOne<EsSite>(SITES_INDEX, {
-      query: {
-        term: { mainDomain: hostname },
-      },
-    })
+  if (!site) {
+    throw new Error(`No site found for hostname: ${hostname}`)
+  }
 
-    if (!site) {
-      throw new Error(`No site found for hostname: ${hostname}`)
-    }
-
-    config = {
-      id: site.id,
-      prefix: sitePrefix,
-      mainDomain: site.mainDomain,
-      defaultLocale: site.defaultLocale,
-      availableLocales: site.availableLocales,
-    }
-  } catch {
-    // ES not available — use sensible defaults
-    config = {
-      id: 0,
-      prefix: sitePrefix,
-      mainDomain: hostname,
-      defaultLocale: 'cs',
-      availableLocales: ['cs'],
-    }
+  const config: SiteConfig = {
+    id: site.id,
+    prefix: sitePrefix,
+    mainDomain: site.mainDomain,
+    defaultLocale: site.defaultLocale,
+    availableLocales: site.availableLocales,
   }
 
   siteCache.set(hostname, { config, expiresAt: now + CACHE_TTL_MS })

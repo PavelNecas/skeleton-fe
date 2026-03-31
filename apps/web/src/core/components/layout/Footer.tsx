@@ -10,7 +10,7 @@ export interface FooterProps {
   links?: FooterLink[]
 }
 
-export function Footer({ siteName, links = [] }: FooterProps) {
+export default function Footer({ siteName, links = [] }: FooterProps) {
   const year = new Date().getFullYear()
 
   return (

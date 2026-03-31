@@ -7,6 +7,49 @@ const mockClient = {
   searchOne: vi.fn(),
 };
 
+const mockEsNavigation = {
+  id: 'main',
+  menuDocumentName: 'MAIN',
+  modificationDate: 1000000,
+  root: {
+    documentId: 15,
+    path: '/',
+    documentType: 'page',
+    navigationData: {
+      name: 'Homepage',
+      title: null,
+      cssClass: null,
+      target: null,
+      anchor: null,
+      parameters: null,
+      exclude: false,
+      relation: null,
+      accesskey: null,
+      tabindex: null,
+    },
+    children: [
+      {
+        documentId: 33,
+        path: '/skeleton_fe_localhost/clanky',
+        documentType: 'page',
+        navigationData: {
+          name: 'Články',
+          title: null,
+          cssClass: null,
+          target: null,
+          anchor: null,
+          parameters: null,
+          exclude: false,
+          relation: null,
+          accesskey: null,
+          tabindex: null,
+        },
+        children: [],
+      },
+    ],
+  },
+};
+
 describe('NavigationsIndex', () => {
   let navigationsIndex: NavigationsIndex;
 
@@ -16,69 +59,104 @@ describe('NavigationsIndex', () => {
   });
 
   describe('getByName', () => {
-    it('searches non-localized index by menuDocumentName', async () => {
-      const mockNav = {
-        id: '1',
-        menuDocumentName: 'main-menu',
-        modificationDate: 1000000,
-        root: {
-          id: '1',
-          path: '/',
-          label: 'Home',
-          href: '/',
-          documentType: 'page',
-          children: [],
-        },
-      };
-      mockClient.searchOne.mockResolvedValueOnce(mockNav);
+    it('searches localized index by menuDocumentName', async () => {
+      mockClient.searchOne.mockResolvedValueOnce(mockEsNavigation);
 
-      const result = await navigationsIndex.getByName('skeleton_localhost', 'main-menu');
+      const result = await navigationsIndex.getByName('skeleton_localhost', 'cs', 'MAIN');
 
-      expect(mockClient.searchOne).toHaveBeenCalledWith('skeleton_localhost_navigations', {
+      expect(mockClient.searchOne).toHaveBeenCalledWith('skeleton_localhost_navigations_cs', {
         query: {
-          term: { menuDocumentName: 'main-menu' },
+          term: { menuDocumentName: 'MAIN' },
         },
       });
-      expect(result).toEqual(mockNav);
+      expect(result).not.toBeNull();
+      expect(result!.menuDocumentName).toBe('MAIN');
+    });
+
+    it('maps ES structure to NavigationNode', async () => {
+      mockClient.searchOne.mockResolvedValueOnce(mockEsNavigation);
+
+      const result = await navigationsIndex.getByName('skeleton_localhost', 'cs', 'MAIN');
+
+      expect(result!.root.id).toBe('15');
+      expect(result!.root.label).toBe('Homepage');
+      expect(result!.root.children[0].id).toBe('33');
+      expect(result!.root.children[0].label).toBe('Články');
+      expect(result!.root.children[0].href).toBe('/clanky');
     });
 
     it('returns null when navigation not found', async () => {
       mockClient.searchOne.mockResolvedValueOnce(null);
 
-      const result = await navigationsIndex.getByName('skeleton_localhost', 'footer-menu');
+      const result = await navigationsIndex.getByName('skeleton_localhost', 'cs', 'NONEXISTENT');
 
       expect(result).toBeNull();
     });
+  });
 
-    it('handles nested NavigationNode children recursively', async () => {
-      const mockNav = {
-        id: '1',
-        menuDocumentName: 'main-menu',
+  describe('getAll', () => {
+    it('fetches all navigations and returns record keyed by menuDocumentName', async () => {
+      const footerEsNav = {
+        id: 'footer',
+        menuDocumentName: 'FOOTER',
         modificationDate: 1000000,
         root: {
-          id: '1',
-          path: '/',
-          label: 'Home',
-          href: '/',
+          documentId: 37,
+          path: '/skeleton_fe_localhost/footer',
           documentType: 'page',
-          children: [
-            {
-              id: '2',
-              path: '/about',
-              label: 'About',
-              href: '/about',
-              documentType: 'page',
-              children: [],
-            },
-          ],
+          navigationData: {
+            name: 'Footer',
+            title: null,
+            cssClass: null,
+            target: null,
+            anchor: null,
+            parameters: null,
+            exclude: false,
+            relation: null,
+            accesskey: null,
+            tabindex: null,
+          },
+          children: [],
         },
       };
-      mockClient.searchOne.mockResolvedValueOnce(mockNav);
+      mockClient.search.mockResolvedValueOnce([mockEsNavigation, footerEsNav]);
 
-      const result = await navigationsIndex.getByName('skeleton_localhost', 'main-menu');
+      const result = await navigationsIndex.getAll('skeleton_localhost', 'cs');
 
-      expect(result?.root.children).toHaveLength(1);
-      expect(result?.root.children[0].path).toBe('/about');
+      expect(mockClient.search).toHaveBeenCalledWith('skeleton_localhost_navigations_cs', {
+        query: { match_all: {} },
+        size: 100,
+      });
+      expect(Object.keys(result)).toEqual(['MAIN', 'FOOTER']);
+      expect(result['MAIN'].root.label).toBe('Homepage');
+      expect(result['FOOTER'].root.label).toBe('Footer');
+    });
+
+    it('returns empty record when no navigations exist', async () => {
+      mockClient.search.mockResolvedValueOnce([]);
+
+      const result = await navigationsIndex.getAll('skeleton_localhost', 'cs');
+
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('stripSitePrefix', () => {
+    it('strips site prefix from paths in mapped nodes', async () => {
+      mockClient.searchOne.mockResolvedValueOnce(mockEsNavigation);
+
+      const result = await navigationsIndex.getByName('skeleton_localhost', 'cs', 'MAIN');
+
+      // "/skeleton_fe_localhost/clanky" → "/clanky"
+      expect(result!.root.children[0].href).toBe('/clanky');
+    });
+
+    it('preserves root path "/"', async () => {
+      mockClient.searchOne.mockResolvedValueOnce(mockEsNavigation);
+
+      const result = await navigationsIndex.getByName('skeleton_localhost', 'cs', 'MAIN');
+
+      expect(result!.root.href).toBe('/');
     });
   });
 });

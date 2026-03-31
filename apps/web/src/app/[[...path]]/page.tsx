@@ -6,7 +6,7 @@ import { MainLayout } from '@/core/layouts/MainLayout'
 import { buildMetadata } from '@/core/components/shared/SEOHead'
 import { resolveComponent } from '@/lib/component-resolver'
 import { fetchPageData } from '@/lib/data-fetching'
-import { fetchMainNavigation } from '@/lib/navigation'
+import { fetchAllNavigations } from '@/lib/navigation'
 import { loadSiteConfig } from '@/lib/site-config'
 import { parseMiddlewareHeaders } from '@/lib/types'
 import type { RouteInfo } from '@/lib/types'
@@ -95,10 +95,11 @@ export default async function CatchAllPage() {
     notFound()
   }
 
-  // Fetch page data (deduplicated with generateMetadata via React.cache) and navigation in parallel
-  const [data, navigationNodes] = await Promise.all([
+  // Fetch page data, navigations, and site config in parallel
+  const [data, navigations, siteConfig] = await Promise.all([
     fetchPageData(sitePrefix, locale, routeInfo),
-    fetchMainNavigation(sitePrefix),
+    fetchAllNavigations(sitePrefix, locale),
+    loadSiteConfig(sitePrefix),
   ])
 
   if (!data) {
@@ -112,9 +113,6 @@ export default async function CatchAllPage() {
     notFound()
   }
 
-  // Load site config (name, theme, features) for this site
-  const siteConfig = await loadSiteConfig(sitePrefix)
-
   // Build locale-aware translation links for LanguageSwitcher
   const translationLinks = buildTranslationUrls(
     routeInfo.translationLinks?.find((l) => l.locale === locale)?.path ?? '/',
@@ -125,10 +123,10 @@ export default async function CatchAllPage() {
 
   return (
     <MainLayout
-      navigationNodes={navigationNodes}
+      navigations={navigations}
       siteName={siteConfig.name}
+      sitePrefix={sitePrefix}
       currentLocale={locale}
-      defaultLocale={defaultLocale}
       translationLinks={translationLinks}
       theme={siteConfig.theme}
     >

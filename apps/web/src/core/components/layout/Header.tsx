@@ -8,15 +8,15 @@ export interface HeaderProps {
   siteName: string
   navigationNodes: NavigationNode[]
   currentLocale: string
-  defaultLocale?: string
+  defaultLocale: string
   translationLinks: TranslationLink[]
 }
 
-export function Header({
+export default function Header({
   siteName,
   navigationNodes,
   currentLocale,
-  defaultLocale = 'cs',
+  defaultLocale,
   translationLinks,
 }: HeaderProps) {
   return (

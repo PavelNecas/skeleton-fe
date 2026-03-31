@@ -45,7 +45,7 @@ vi.mock('@/lib/data-fetching', () => ({
 
 // Mock navigation fetching
 vi.mock('@/lib/navigation', () => ({
-  fetchMainNavigation: vi.fn().mockResolvedValue([]),
+  fetchAllNavigations: vi.fn().mockResolvedValue({}),
 }))
 
 // Mock site config to avoid dynamic import side effects

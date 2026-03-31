@@ -1,15 +1,37 @@
-import type { NavigationNode } from '@skeleton-fe/sdk-elastic'
+import { unstable_cache } from 'next/cache'
+import type { Navigation, NavigationNode } from '@skeleton-fe/sdk-elastic'
 
 import { getElasticClient } from './elastic-client'
 
-export const DEFAULT_MENU_NAME = 'main-navigation'
+export const MAIN_NAVIGATION = 'MAIN'
+export const FOOTER_NAVIGATION = 'FOOTER'
 
 /**
- * Fetches the main navigation tree for a given site prefix.
- * Returns the root node's children (top-level navigation items).
+ * Fetches all navigations for a given site prefix and locale.
+ * Results are cached across requests (revalidated every 60s).
+ * Returns a record keyed by menuDocumentName.
  */
-export async function fetchMainNavigation(sitePrefix: string): Promise<NavigationNode[]> {
-  const es = getElasticClient()
-  const navigation = await es.navigations.getByName(sitePrefix, DEFAULT_MENU_NAME)
-  return navigation?.root.children ?? []
+export const fetchAllNavigations = unstable_cache(
+  async (sitePrefix: string, locale: string): Promise<Record<string, Navigation>> => {
+    try {
+      const es = getElasticClient()
+      return await es.navigations.getAll(sitePrefix, locale)
+    } catch (error) {
+      console.warn(`Failed to fetch navigations for ${sitePrefix}/${locale}:`, error)
+      return {}
+    }
+  },
+  ['navigations'],
+  { revalidate: 60, tags: ['navigations'] },
+)
+
+/**
+ * Extracts navigation nodes (root children) for a given navigation name.
+ * Returns an empty array if the navigation doesn't exist.
+ */
+export function getNavigationNodes(
+  navigations: Record<string, Navigation>,
+  name: string,
+): NavigationNode[] {
+  return navigations[name]?.root.children ?? []
 }
