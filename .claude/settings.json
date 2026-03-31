@@ -1,0 +1,108 @@
+{
+  "initialPermissionMode": "acceptEdits",
+  "permissions": {
+    "allow": [
+      "Bash(make *)",
+      "Bash(docker compose *)",
+      "Bash(npm run *)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git status *)",
+      "Bash(git stash *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git fetch *)",
+      "Bash(git switch *)",
+      "Bash(git tag *)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(gh api *)",
+      "Bash(vendor/bin/codecept *)",
+      "Bash(vendor/bin/phpstan *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(find *)",
+      "Bash(which *)",
+      "Bash(php *)",
+      "Bash(composer *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv /Users/pavelnecas/Sites/skeleton/*)",
+      "Bash(touch *)",
+      "Bash(rm /Users/pavelnecas/Sites/skeleton/*)",
+      "Bash(echo *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(sed /Users/pavelnecas/Sites/skeleton/*)",
+      "Bash(awk *)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(curl *)",
+      "Bash(pwd)",
+      "Bash(env *)",
+      "Bash(test *)",
+      "Bash(diff *)",
+      "Bash(basename *)",
+      "Bash(dirname *)",
+      "Bash(realpath *)",
+      "Bash(xargs *)",
+      "Bash(chmod /Users/pavelnecas/Sites/skeleton/*)",
+      "Bash(python3 *)",
+      "Bash(for *)",
+      "Bash(gh repo *)",
+      "Bash(xxd *)",
+      "Bash(docker exec *)",
+      "Bash(npx *)",
+      "WebSearch",
+      "WebFetch(domain:docs.pimcore.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:pimcore.com)",
+      "mcp__postman__*",
+      "mcp__chrome-devtools__*",
+      "mcp__tailwindcss__*"
+    ],
+    "deny": [
+      "Bash(git push origin main)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)",
+      "Bash(rm -rf *)",
+      "Bash(git branch -D *)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "tailwindcss"
+  ],
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "say -v Boing \"Robots need your instructions.\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "say -v Boing \"Attention! Robots are on strike!\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
