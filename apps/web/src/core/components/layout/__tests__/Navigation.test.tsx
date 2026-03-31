@@ -45,19 +45,19 @@ const nestedNodes: NavigationNode[] = [
 
 describe('Navigation', () => {
   it('renders null when nodes are empty', () => {
-    const { container } = render(<Navigation nodes={[]} />)
+    const { container } = render(<Navigation nodes={[]} currentLocale="cs" defaultLocale="cs" />)
     expect(container.firstChild).toBeNull()
   })
 
   it('renders flat navigation nodes', () => {
-    render(<Navigation nodes={flatNodes} />)
+    render(<Navigation nodes={flatNodes} currentLocale="cs" defaultLocale="cs" />)
 
     expect(screen.getByText('Home')).toBeInTheDocument()
     expect(screen.getByText('About')).toBeInTheDocument()
   })
 
   it('renders links with correct hrefs', () => {
-    render(<Navigation nodes={flatNodes} />)
+    render(<Navigation nodes={flatNodes} currentLocale="cs" defaultLocale="cs" />)
 
     const homeLink = screen.getByText('Home').closest('a')
     const aboutLink = screen.getByText('About').closest('a')
@@ -67,7 +67,7 @@ describe('Navigation', () => {
   })
 
   it('renders nested navigation nodes recursively', () => {
-    render(<Navigation nodes={nestedNodes} />)
+    render(<Navigation nodes={nestedNodes} currentLocale="cs" defaultLocale="cs" />)
 
     expect(screen.getByText('Products')).toBeInTheDocument()
     expect(screen.getByText('Shoes')).toBeInTheDocument()
@@ -79,7 +79,7 @@ describe('Navigation', () => {
       { id: '1', path: '/section', label: 'Section', href: null, documentType: null, children: [] },
     ]
 
-    render(<Navigation nodes={noHrefNodes} />)
+    render(<Navigation nodes={noHrefNodes} currentLocale="cs" defaultLocale="cs" />)
     const span = screen.getByText('Section')
 
     expect(span.tagName).toBe('SPAN')
@@ -97,12 +97,12 @@ describe('Navigation', () => {
       },
     ]
 
-    render(<Navigation nodes={nullLabelNode} />)
+    render(<Navigation nodes={nullLabelNode} currentLocale="cs" defaultLocale="cs" />)
     expect(screen.getByText('node-id')).toBeInTheDocument()
   })
 
   it('has nav with aria-label', () => {
-    render(<Navigation nodes={flatNodes} />)
+    render(<Navigation nodes={flatNodes} currentLocale="cs" defaultLocale="cs" />)
     const nav = screen.getByRole('navigation')
 
     expect(nav).toHaveAttribute('aria-label', 'Main navigation')

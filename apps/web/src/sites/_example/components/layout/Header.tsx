@@ -12,6 +12,7 @@ export interface ExampleHeaderProps {
   siteName: string
   navigationNodes: NavigationNode[]
   currentLocale: string
+  defaultLocale: string
   translationLinks: TranslationLink[]
 }
 
@@ -19,6 +20,7 @@ export default function ExampleHeader({
   siteName,
   navigationNodes,
   currentLocale,
+  defaultLocale,
   translationLinks,
 }: ExampleHeaderProps) {
   return (
@@ -28,7 +30,7 @@ export default function ExampleHeader({
           <Link href="/" className="text-lg font-bold hover:opacity-80 transition-opacity">
             {siteName}
           </Link>
-          <Navigation nodes={navigationNodes} />
+          <Navigation nodes={navigationNodes} currentLocale={currentLocale} defaultLocale={defaultLocale} />
         </div>
         <LanguageSwitcher currentLocale={currentLocale} links={translationLinks} />
       </div>

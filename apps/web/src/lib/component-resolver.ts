@@ -23,7 +23,7 @@ export async function resolveComponent(
 
   const templatePath = controllerTemplate
     .split(':')
-    .map(s => s.charAt(0).toUpperCase() + s.slice(1))
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
     .join('/')
 
   // 1. Try site override

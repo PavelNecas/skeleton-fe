@@ -1,4 +1,20 @@
 import type { ElasticClient } from '../client'
+import type { NavigationData } from '../types'
+
+interface EsNavigationNode {
+  documentId: number
+  path: string
+  documentType: string | null
+  navigationData: NavigationData
+  children: EsNavigationNode[]
+}
+
+interface EsNavigation {
+  id: string
+  menuDocumentName: string
+  modificationDate: number
+  root: EsNavigationNode
+}
 
 export interface NavigationNode {
   id: string
@@ -16,18 +32,66 @@ export interface Navigation {
   root: NavigationNode
 }
 
+function stripSitePrefix(path: string): string {
+  // Paths from ES include the site prefix, e.g. "/skeleton_fe_localhost/clanky"
+  // Strip the first segment to get the route path: "/clanky"
+  const parts = path.split('/')
+  if (parts.length > 2) {
+    return '/' + parts.slice(2).join('/')
+  }
+  return path
+}
+
+function mapNode(node: EsNavigationNode): NavigationNode {
+  return {
+    id: String(node.documentId),
+    path: node.path,
+    label: node.navigationData.name,
+    href: stripSitePrefix(node.path),
+    documentType: node.documentType,
+    children: node.children.map(mapNode),
+  }
+}
+
+function mapNavigation(raw: EsNavigation): Navigation {
+  return {
+    id: raw.id,
+    menuDocumentName: raw.menuDocumentName,
+    modificationDate: raw.modificationDate,
+    root: mapNode(raw.root),
+  }
+}
+
 export class NavigationsIndex {
   constructor(private readonly client: ElasticClient) {}
 
-  private indexName(sitePrefix: string): string {
-    return `${sitePrefix}_navigations`
+  private indexName(sitePrefix: string, locale: string): string {
+    return `${sitePrefix}_navigations_${locale}`
   }
 
-  async getByName(sitePrefix: string, menuDocumentName: string): Promise<Navigation | null> {
-    return this.client.searchOne<Navigation>(this.indexName(sitePrefix), {
+  async getByName(
+    sitePrefix: string,
+    locale: string,
+    menuDocumentName: string,
+  ): Promise<Navigation | null> {
+    const raw = await this.client.searchOne<EsNavigation>(this.indexName(sitePrefix, locale), {
       query: {
         term: { menuDocumentName },
       },
     })
+    return raw ? mapNavigation(raw) : null
+  }
+
+  async getAll(sitePrefix: string, locale: string): Promise<Record<string, Navigation>> {
+    const results = await this.client.search<EsNavigation>(this.indexName(sitePrefix, locale), {
+      query: { match_all: {} },
+      size: 100,
+    })
+
+    const map: Record<string, Navigation> = {}
+    for (const raw of results) {
+      map[raw.menuDocumentName] = mapNavigation(raw)
+    }
+    return map
   }
 }

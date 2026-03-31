@@ -42,25 +42,18 @@ describe('resolveSite', () => {
     })
   })
 
-  it('falls back to defaults when ES returns null', async () => {
+  it('throws when ES returns null', async () => {
     mockEsSearchOne.mockResolvedValueOnce(null)
 
-    const config = await resolveSite('skeleton-fe.localhost')
-
-    expect(config.id).toBe(0)
-    expect(config.prefix).toBe('skeleton_fe_localhost')
-    expect(config.defaultLocale).toBe('cs')
-    expect(config.availableLocales).toEqual(['cs'])
+    await expect(resolveSite('skeleton-fe.localhost')).rejects.toThrow(
+      'No site found for hostname: skeleton-fe.localhost',
+    )
   })
 
-  it('falls back to defaults when ES throws', async () => {
+  it('throws when ES is unavailable', async () => {
     mockEsSearchOne.mockRejectedValueOnce(new Error('ES unavailable'))
 
-    const config = await resolveSite('skeleton-fe.localhost')
-
-    expect(config.prefix).toBe('skeleton_fe_localhost')
-    expect(config.defaultLocale).toBe('cs')
-    expect(config.availableLocales).toEqual(['cs'])
+    await expect(resolveSite('skeleton-fe.localhost')).rejects.toThrow('ES unavailable')
   })
 
   it('caches the result and does not call ES again', async () => {
@@ -73,7 +66,10 @@ describe('resolveSite', () => {
   })
 
   it('derives prefix from hostname', async () => {
-    mockEsSearchOne.mockResolvedValueOnce(null)
+    mockEsSearchOne.mockResolvedValueOnce({
+      ...FULL_ES_SITE,
+      mainDomain: 'my-site.example.com',
+    })
 
     const config = await resolveSite('my-site.example.com')
     expect(config.prefix).toBe('my_site_example_com')

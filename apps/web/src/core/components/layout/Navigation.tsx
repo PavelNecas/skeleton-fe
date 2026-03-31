@@ -5,8 +5,8 @@ import { buildNavigationUrl } from '@/lib/url'
 
 export interface NavigationProps {
   nodes: NavigationNode[]
-  currentLocale?: string
-  defaultLocale?: string
+  currentLocale: string
+  defaultLocale: string
 }
 
 interface NavigationNodeItemProps {
@@ -45,7 +45,7 @@ function NavigationNodeItem({ node, currentLocale, defaultLocale }: NavigationNo
   )
 }
 
-export function Navigation({ nodes, currentLocale = 'cs', defaultLocale = 'cs' }: NavigationProps) {
+export function Navigation({ nodes, currentLocale, defaultLocale }: NavigationProps) {
   if (nodes.length === 0) {
     return null
   }
