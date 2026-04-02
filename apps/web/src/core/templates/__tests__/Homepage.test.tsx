@@ -15,6 +15,7 @@ import Homepage from '../Cms/Homepage/Default'
 const mockRoute: RouteInfo = {
   sourceId: 1,
   sourceType: 'document',
+  objectType: 'Page',
   controllerTemplate: 'Cms:Homepage:default',
   translationLinks: [],
 }

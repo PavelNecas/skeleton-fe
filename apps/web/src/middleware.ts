@@ -67,6 +67,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const routeInfo: RouteInfo = {
     sourceId: routeResult.sourceId,
     sourceType: routeResult.sourceType,
+    objectType: routeResult.objectType,
     controllerTemplate: routeResult.controllerTemplate,
     translationLinks: routeResult.translationLinks,
   }

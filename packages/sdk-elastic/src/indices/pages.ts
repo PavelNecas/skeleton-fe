@@ -13,7 +13,7 @@ export interface Page {
   site: string
   parentId: number
   index: number
-  prettyUrl: string
+  prettyUrl: string | null
   creationDate: number
   technicalData: PageTechnicalData
   navigationData: NavigationData

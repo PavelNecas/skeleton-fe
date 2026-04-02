@@ -25,7 +25,7 @@ describe('RoutesIndex', () => {
         locale: 'cs',
         aliases: [],
         sourceType: 'document',
-        objectType: 'page',
+        objectType: 'Page',
         controllerTemplate: 'default',
         uid: 'abc123',
         redirect: '',

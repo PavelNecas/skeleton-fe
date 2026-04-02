@@ -32,6 +32,7 @@ import ContentArticles from '../Cms/Articles/Default'
 const mockRoute: RouteInfo = {
   sourceId: 10,
   sourceType: 'document',
+  objectType: 'Page',
   controllerTemplate: 'Cms:Articles:default',
   translationLinks: [],
 }
