@@ -19,13 +19,12 @@ export function buildLocalizedUrl(path: string, locale: string, defaultLocale: s
 }
 
 /**
- * Builds an array of TranslationLink objects for the LanguageSwitcher and hreflang tags.
+ * Builds an array of TranslationLink objects for the LanguageSwitcher.
  *
- * Combines the current page (currentPath + currentLocale) with the translationLinks
- * from the route to produce the full list of localized URLs, excluding the current locale.
+ * Uses translationLinks from the route to produce the full list of localized URLs,
+ * excluding the current locale.
  */
 export function buildTranslationUrls(
-  currentPath: string,
   currentLocale: string,
   defaultLocale: string,
   translationLinks: RouteTranslationLink[],

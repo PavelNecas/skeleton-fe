@@ -84,10 +84,11 @@ describe('resolveRoute', () => {
 
     await resolveRoute('my_prefix', '/page', LOCALE)
 
-    const [index, query] = mockEsSearchOne.mock.calls[0] as [string, { query: { bool: { must: Array<Record<string, unknown>> } } }]
+    const [index, query] = mockEsSearchOne.mock.calls[0] as [string, Record<string, unknown>]
     expect(index).toBe('my_prefix_routes')
     // Verify locale filter is included in the query
-    expect(query.query.bool.must).toContainEqual({ term: { locale: LOCALE } })
+    const must = (query as { query: { bool: { must: Array<Record<string, unknown>> } } }).query.bool.must
+    expect(must).toContainEqual({ term: { locale: LOCALE } })
   })
 
   it('returns RouteResolution for homepage /', async () => {

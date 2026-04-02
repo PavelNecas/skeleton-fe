@@ -37,7 +37,7 @@ describe('buildLocalizedUrl', () => {
 
 describe('buildTranslationUrls', () => {
   it('returns empty array when no translation links', () => {
-    const result = buildTranslationUrls('/clanky', 'cs', DEFAULT_LOCALE, [])
+    const result = buildTranslationUrls('cs', DEFAULT_LOCALE, [])
     expect(result).toEqual([])
   })
 
@@ -46,14 +46,14 @@ describe('buildTranslationUrls', () => {
       { locale: 'cs', sourceId: 1, path: 'clanky' },
       { locale: 'en', sourceId: 2, path: 'articles' },
     ]
-    const result = buildTranslationUrls('/clanky', 'cs', DEFAULT_LOCALE, translationLinks)
+    const result = buildTranslationUrls('cs', DEFAULT_LOCALE, translationLinks)
     expect(result).toHaveLength(1)
     expect(result[0]).toEqual({ locale: 'en', href: '/en/articles' })
   })
 
   it('uses correct href for default locale translation link', () => {
     const translationLinks = [{ locale: 'cs', sourceId: 1, path: 'clanky' }]
-    const result = buildTranslationUrls('/articles', 'en', DEFAULT_LOCALE, translationLinks)
+    const result = buildTranslationUrls('en', DEFAULT_LOCALE, translationLinks)
     expect(result).toHaveLength(1)
     expect(result[0]).toEqual({ locale: 'cs', href: '/clanky' })
   })
@@ -63,7 +63,7 @@ describe('buildTranslationUrls', () => {
       { locale: 'en', sourceId: 10, path: 'articles' },
       { locale: 'de', sourceId: 11, path: 'artikel' },
     ]
-    const result = buildTranslationUrls('/clanky', 'cs', DEFAULT_LOCALE, translationLinks)
+    const result = buildTranslationUrls('cs', DEFAULT_LOCALE, translationLinks)
     expect(result).toHaveLength(2)
     expect(result.find((l) => l.locale === 'en')).toEqual({ locale: 'en', href: '/en/articles' })
     expect(result.find((l) => l.locale === 'de')).toEqual({ locale: 'de', href: '/de/artikel' })
