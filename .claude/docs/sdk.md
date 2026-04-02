@@ -74,8 +74,8 @@ class ElasticClient {
 ### Key Query Builders
 
 **RoutesIndex:**
-- `findByPath(sitePrefix, path)` → search `{sitePrefix}_routes` WHERE path + published
-- `findByAlias(sitePrefix, path)` → nested query on aliases array
+- `findByPath(sitePrefix, path, locale)` → search `{sitePrefix}_routes` WHERE path + locale + published. Paths are flat (no leading `/`, except homepage `"/"`). Non-default locale homepages use the locale code as path (e.g., `"en"`).
+- `findByAlias(sitePrefix, path, locale)` → nested query on aliases array, filtered by locale
 - `findTranslations(sitePrefix, sourceId)` → all routes with same sourceId
 
 **PagesIndex:**

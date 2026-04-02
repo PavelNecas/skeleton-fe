@@ -69,6 +69,19 @@ Frontend e-commerce skeleton on **Next.js (App Router) + TypeScript**. Monorepo 
 - Tests run against a live app connected to ES; use `test.skip()` gracefully when backend data is unavailable
 - `BASE_URL` env var overrides the default `http://localhost:3000`
 
+## Workflow Orchestration
+
+- **Always create a plan** for every task: write it to `.claude/tasks/todo.md` with checkable items (change todo.md for your task title), define phases, their order, and dependencies. Check in with the user before implementing.
+- **Planning requires Opus model** — the plan must be created by the Opus model. If the current session is not running on Opus, notify the user and ask them to switch before proceeding.
+- **Code changes always via Sonnet sub-agents** — never modify code directly in the main context. Run each phase as a sub-agent with Sonnet model. Phases can run sequentially or in parallel if independent. Review and integrate outputs before moving to the next phase.
+- Mark plan items complete as you go.
+- **Post-implementation review with Opus** — after all code changes are complete, launch a sub-agent with Opus model to review all changes. Give the review sub-agent the task requirements (issue/plan) so it knows *what* should have been done, but do NOT pass the implementer's reasoning or decisions — let it judge the code independently with fresh eyes. Focus the review on: correctness, adherence to project conventions, missing edge cases, test coverage, and security. If the review finds issues, pass the review output to a Sonnet sub-agent to fix them. Repeat the review–fix loop up to **3 iterations**. If 3 iterations pass without approval, proceed anyway but note unresolved issues.
+- **Security review before PR** — after all code changes and reviews are complete, run `/security-review` to check for security vulnerabilities before creating the PR.
+- **Code review after PR** — after creating the PR, run `/review {pr_number}` for minimum 3 iterations. Continue beyond 3 as long as 🔴 Normal findings persist — all 🔴 must be resolved. 🟡 Nit findings should be fixed or noted in the PR description.
+- After ANY correction due to your mistake or wrong guidance in md files: first fix the root source (skill, rule, convention) if editable — only add to `.claude/tasks/lessons.md` if no editable source exists
+- Review `.claude/tasks/lessons.md` at session start
+- **Cleanup after completion** — once all checklist items in a task file are done and verified, delete the task file from `.claude/tasks/` (do not delete `lessons.md`)
+
 ## Commands
 
 ```bash

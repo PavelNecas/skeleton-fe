@@ -9,20 +9,27 @@ import type { RouteTranslationLink } from './types'
  * - Secondary locale: /{locale}{path} → `/en/path`
  */
 export function buildLocalizedUrl(path: string, locale: string, defaultLocale: string): string {
-  if (locale === defaultLocale) {
-    return path
+  // Non-default locale homepages are stored with path == locale code (e.g., "en")
+  if (path === locale) {
+    return locale === defaultLocale ? '/' : `/${locale}`
   }
-  return `/${locale}${path}`
+
+  // Ensure path has leading slash (ES stores flat paths like "clanky")
+  const normalized = path === '/' || path.startsWith('/') ? path : `/${path}`
+
+  if (locale === defaultLocale) {
+    return normalized
+  }
+  return `/${locale}${normalized}`
 }
 
 /**
- * Builds an array of TranslationLink objects for the LanguageSwitcher and hreflang tags.
+ * Builds an array of TranslationLink objects for the LanguageSwitcher.
  *
- * Combines the current page (currentPath + currentLocale) with the translationLinks
- * from the route to produce the full list of localized URLs, excluding the current locale.
+ * Uses translationLinks from the route to produce the full list of localized URLs,
+ * excluding the current locale.
  */
 export function buildTranslationUrls(
-  currentPath: string,
   currentLocale: string,
   defaultLocale: string,
   translationLinks: RouteTranslationLink[],

@@ -1,4 +1,4 @@
-import { unstable_cache } from 'next/cache'
+import { cache } from 'react'
 import type { Navigation, NavigationNode } from '@skeleton-fe/sdk-elastic'
 
 import { getElasticClient } from './elastic-client'
@@ -8,10 +8,10 @@ export const FOOTER_NAVIGATION = 'FOOTER'
 
 /**
  * Fetches all navigations for a given site prefix and locale.
- * Results are cached across requests (revalidated every 60s).
+ * Deduplicated per request via React.cache().
  * Returns a record keyed by menuDocumentName.
  */
-export const fetchAllNavigations = unstable_cache(
+export const fetchAllNavigations = cache(
   async (sitePrefix: string, locale: string): Promise<Record<string, Navigation>> => {
     try {
       const es = getElasticClient()
@@ -21,8 +21,6 @@ export const fetchAllNavigations = unstable_cache(
       return {}
     }
   },
-  ['navigations'],
-  { revalidate: 60, tags: ['navigations'] },
 )
 
 /**

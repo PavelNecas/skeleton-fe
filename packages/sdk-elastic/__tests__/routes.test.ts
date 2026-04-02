@@ -16,12 +16,13 @@ describe('RoutesIndex', () => {
   });
 
   describe('findByPath', () => {
-    it('searches correct index with path and published filter', async () => {
+    it('searches correct index with path, locale, and published filter', async () => {
       const mockRoute = {
         sourceId: 1,
-        path: '/test',
+        path: 'test',
         published: true,
         site: 'skeleton_localhost',
+        locale: 'cs',
         aliases: [],
         sourceType: 'document',
         objectType: 'page',
@@ -34,13 +35,14 @@ describe('RoutesIndex', () => {
       };
       mockClient.searchOne.mockResolvedValueOnce(mockRoute);
 
-      const result = await routesIndex.findByPath('skeleton_localhost', '/test');
+      const result = await routesIndex.findByPath('skeleton_localhost', 'test', 'cs');
 
       expect(mockClient.searchOne).toHaveBeenCalledWith('skeleton_localhost_routes', {
         query: {
           bool: {
             must: [
-              { term: { path: '/test' } },
+              { term: { path: 'test' } },
+              { term: { locale: 'cs' } },
               { term: { published: true } },
             ],
           },
@@ -52,25 +54,32 @@ describe('RoutesIndex', () => {
     it('returns null when route not found', async () => {
       mockClient.searchOne.mockResolvedValueOnce(null);
 
-      const result = await routesIndex.findByPath('skeleton_localhost', '/nonexistent');
+      const result = await routesIndex.findByPath('skeleton_localhost', 'nonexistent', 'cs');
 
       expect(result).toBeNull();
     });
   });
 
   describe('findByAlias', () => {
-    it('searches with nested alias query', async () => {
+    it('searches with nested alias query and locale filter', async () => {
       mockClient.searchOne.mockResolvedValueOnce(null);
 
-      await routesIndex.findByAlias('skeleton_localhost', '/old-path');
+      await routesIndex.findByAlias('skeleton_localhost', 'old-path', 'cs');
 
       expect(mockClient.searchOne).toHaveBeenCalledWith('skeleton_localhost_routes', {
         query: {
-          nested: {
-            path: 'aliases',
-            query: {
-              term: { 'aliases.path': '/old-path' },
-            },
+          bool: {
+            must: [
+              { term: { locale: 'cs' } },
+              {
+                nested: {
+                  path: 'aliases',
+                  query: {
+                    term: { 'aliases.path': 'old-path' },
+                  },
+                },
+              },
+            ],
           },
         },
       });
@@ -80,8 +89,8 @@ describe('RoutesIndex', () => {
   describe('findTranslations', () => {
     it('searches by sourceId', async () => {
       const mockRoutes = [
-        { sourceId: 42, path: '/cs/test', published: true },
-        { sourceId: 42, path: '/en/test', published: true },
+        { sourceId: 42, path: 'test-cs', published: true },
+        { sourceId: 42, path: 'test-en', published: true },
       ];
       mockClient.search.mockResolvedValueOnce(mockRoutes);
 

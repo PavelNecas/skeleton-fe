@@ -26,8 +26,9 @@ const makeRoute = (overrides?: Partial<Record<string, unknown>>) => ({
   objectType: 'page',
   controllerTemplate: 'Cms:Page:default',
   uid: 'abc',
-  path: '/about-us',
+  path: 'about-us',
   site: SITE_PREFIX,
+  locale: LOCALE,
   published: true,
   redirect: '',
   redirectCode: '',
@@ -47,7 +48,7 @@ describe('resolveRoute', () => {
       sourceId: 42,
       sourceType: 'document',
       controllerTemplate: 'Cms:Page:default',
-      path: '/about-us',
+      path: 'about-us',
       translationLinks: [],
     })
   })
@@ -57,7 +58,7 @@ describe('resolveRoute', () => {
     mockEsSearchOne.mockResolvedValueOnce(null)
     // Second call (alias lookup) returns a route with canonical path
     mockEsSearchOne.mockResolvedValueOnce(
-      makeRoute({ path: '/about-us', aliases: [{ path: '/about' }] }),
+      makeRoute({ path: 'about-us', aliases: [{ path: 'about' }] }),
     )
 
     const result = await resolveRoute(SITE_PREFIX, '/about', LOCALE)
@@ -65,7 +66,7 @@ describe('resolveRoute', () => {
     expect(result).toEqual({
       kind: 'redirect',
       statusCode: 301,
-      destination: '/about-us',
+      destination: 'about-us',
     })
   })
 
@@ -78,13 +79,16 @@ describe('resolveRoute', () => {
     expect(result).toEqual({ kind: 'not-found' })
   })
 
-  it('queries the correct index', async () => {
+  it('queries the correct index with locale filter', async () => {
     mockEsSearchOne.mockResolvedValueOnce(makeRoute())
 
     await resolveRoute('my_prefix', '/page', LOCALE)
 
-    const [index] = mockEsSearchOne.mock.calls[0] as [string, object]
+    const [index, query] = mockEsSearchOne.mock.calls[0] as [string, Record<string, unknown>]
     expect(index).toBe('my_prefix_routes')
+    // Verify locale filter is included in the query
+    const must = (query as { query: { bool: { must: Array<Record<string, unknown>> } } }).query.bool.must
+    expect(must).toContainEqual({ term: { locale: LOCALE } })
   })
 
   it('returns RouteResolution for homepage /', async () => {
@@ -94,8 +98,26 @@ describe('resolveRoute', () => {
     expect(result.kind).toBe('route')
   })
 
+  it('finds EN homepage via fallback when path "/" returns null for non-default locale', async () => {
+    // First call: direct path "/" lookup returns null (EN homepage has path "en" not "/")
+    mockEsSearchOne.mockResolvedValueOnce(null)
+    // Second call: fallback lookup with locale as path returns the EN homepage
+    mockEsSearchOne.mockResolvedValueOnce(makeRoute({ path: 'en', locale: 'en' }))
+
+    const result = await resolveRoute(SITE_PREFIX, '/', 'en')
+
+    expect(result).toEqual({
+      kind: 'route',
+      sourceId: 42,
+      sourceType: 'document',
+      controllerTemplate: 'Cms:Page:default',
+      path: 'en',
+      translationLinks: [],
+    })
+  })
+
   it('includes translationLinks from ES route in RouteResolution', async () => {
-    const translationLinks = [{ locale: 'en', sourceId: 78, path: '/about-us' }]
+    const translationLinks = [{ locale: 'en', sourceId: 78, path: 'about-us' }]
     mockEsSearchOne.mockResolvedValueOnce(makeRoute({ translationLinks }))
 
     const result = await resolveRoute(SITE_PREFIX, '/about-us', LOCALE)

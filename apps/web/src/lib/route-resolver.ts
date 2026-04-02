@@ -14,6 +14,7 @@ interface EsRoute {
   uid: string
   path: string
   site: string
+  locale: string
   published: boolean
   redirect: string
   redirectCode: string
@@ -54,18 +55,18 @@ export type RouteResult = RouteResolution | RedirectResolution | NotFoundResolut
 export async function resolveRoute(
   sitePrefix: string,
   path: string,
-  _locale: string,
+  locale: string,
 ): Promise<RouteResult> {
   const index = `${sitePrefix}_routes`
 
   // ES stores paths without leading slash (except homepage "/")
   const esPath = path === '/' ? '/' : path.replace(/^\//, '')
 
-  // 1. Direct path lookup
+  // 1. Direct path lookup (filtered by locale)
   const route = await esSearchOne<EsRoute>(index, {
     query: {
       bool: {
-        must: [{ term: { path: esPath } }, { term: { published: true } }],
+        must: [{ term: { path: esPath } }, { term: { locale } }, { term: { published: true } }],
       },
     },
   })
@@ -81,14 +82,43 @@ export async function resolveRoute(
     }
   }
 
-  // 2. Alias lookup
+  // 1b. Fallback for non-default locale homepage: ES stores it as path == locale code (e.g. "en")
+  if (path === '/') {
+    const homepageByLocale = await esSearchOne<EsRoute>(index, {
+      query: {
+        bool: {
+          must: [{ term: { path: locale } }, { term: { locale } }, { term: { published: true } }],
+        },
+      },
+    })
+
+    if (homepageByLocale) {
+      return {
+        kind: 'route',
+        sourceId: homepageByLocale.sourceId,
+        sourceType: homepageByLocale.sourceType,
+        controllerTemplate: homepageByLocale.controllerTemplate,
+        path: homepageByLocale.path,
+        translationLinks: homepageByLocale.translationLinks ?? [],
+      }
+    }
+  }
+
+  // 2. Alias lookup (filtered by locale)
   const aliasRoute = await esSearchOne<EsRoute>(index, {
     query: {
-      nested: {
-        path: 'aliases',
-        query: {
-          term: { 'aliases.path': esPath },
-        },
+      bool: {
+        must: [
+          { term: { locale } },
+          {
+            nested: {
+              path: 'aliases',
+              query: {
+                term: { 'aliases.path': esPath },
+              },
+            },
+          },
+        ],
       },
     },
   })

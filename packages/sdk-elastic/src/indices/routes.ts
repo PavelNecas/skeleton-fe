@@ -18,6 +18,7 @@ export interface Route {
   uid: string
   path: string
   site: string
+  locale: string
   published: boolean
   redirect: string
   redirectCode: string
@@ -34,24 +35,31 @@ export class RoutesIndex {
     return `${sitePrefix}_routes`
   }
 
-  async findByPath(sitePrefix: string, path: string): Promise<Route | null> {
+  async findByPath(sitePrefix: string, path: string, locale: string): Promise<Route | null> {
     return this.client.searchOne<Route>(this.indexName(sitePrefix), {
       query: {
         bool: {
-          must: [{ term: { path } }, { term: { published: true } }],
+          must: [{ term: { path } }, { term: { locale } }, { term: { published: true } }],
         },
       },
     })
   }
 
-  async findByAlias(sitePrefix: string, path: string): Promise<Route | null> {
+  async findByAlias(sitePrefix: string, path: string, locale: string): Promise<Route | null> {
     return this.client.searchOne<Route>(this.indexName(sitePrefix), {
       query: {
-        nested: {
-          path: 'aliases',
-          query: {
-            term: { 'aliases.path': path },
-          },
+        bool: {
+          must: [
+            { term: { locale } },
+            {
+              nested: {
+                path: 'aliases',
+                query: {
+                  term: { 'aliases.path': path },
+                },
+              },
+            },
+          ],
         },
       },
     })

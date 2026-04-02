@@ -10,12 +10,20 @@ import {
 const DEFAULT_LOCALE = 'cs'
 
 describe('buildLocalizedUrl', () => {
-  it('returns path as-is for default locale', () => {
+  it('returns path with leading slash for default locale', () => {
     expect(buildLocalizedUrl('/clanky', 'cs', DEFAULT_LOCALE)).toBe('/clanky')
+  })
+
+  it('normalizes flat path (no leading slash) for default locale', () => {
+    expect(buildLocalizedUrl('clanky', 'cs', DEFAULT_LOCALE)).toBe('/clanky')
   })
 
   it('prepends locale prefix for non-default locale', () => {
     expect(buildLocalizedUrl('/articles', 'en', DEFAULT_LOCALE)).toBe('/en/articles')
+  })
+
+  it('normalizes flat path and prepends locale for non-default locale', () => {
+    expect(buildLocalizedUrl('articles', 'en', DEFAULT_LOCALE)).toBe('/en/articles')
   })
 
   it('handles root path for default locale', () => {
@@ -25,37 +33,46 @@ describe('buildLocalizedUrl', () => {
   it('handles root path for non-default locale', () => {
     expect(buildLocalizedUrl('/', 'en', DEFAULT_LOCALE)).toBe('/en/')
   })
+
+  it('handles non-default locale homepage where path equals locale code', () => {
+    // EN homepage in ES has path "en" — should produce /en, not /en/en
+    expect(buildLocalizedUrl('en', 'en', DEFAULT_LOCALE)).toBe('/en')
+  })
+
+  it('handles default locale homepage where path equals locale code', () => {
+    expect(buildLocalizedUrl('cs', 'cs', DEFAULT_LOCALE)).toBe('/')
+  })
 })
 
 describe('buildTranslationUrls', () => {
   it('returns empty array when no translation links', () => {
-    const result = buildTranslationUrls('/clanky', 'cs', DEFAULT_LOCALE, [])
+    const result = buildTranslationUrls('cs', DEFAULT_LOCALE, [])
     expect(result).toEqual([])
   })
 
   it('excludes the current locale from results', () => {
     const translationLinks = [
-      { locale: 'cs', sourceId: 1, path: '/clanky' },
-      { locale: 'en', sourceId: 2, path: '/articles' },
+      { locale: 'cs', sourceId: 1, path: 'clanky' },
+      { locale: 'en', sourceId: 2, path: 'articles' },
     ]
-    const result = buildTranslationUrls('/clanky', 'cs', DEFAULT_LOCALE, translationLinks)
+    const result = buildTranslationUrls('cs', DEFAULT_LOCALE, translationLinks)
     expect(result).toHaveLength(1)
     expect(result[0]).toEqual({ locale: 'en', href: '/en/articles' })
   })
 
   it('uses correct href for default locale translation link', () => {
-    const translationLinks = [{ locale: 'cs', sourceId: 1, path: '/clanky' }]
-    const result = buildTranslationUrls('/articles', 'en', DEFAULT_LOCALE, translationLinks)
+    const translationLinks = [{ locale: 'cs', sourceId: 1, path: 'clanky' }]
+    const result = buildTranslationUrls('en', DEFAULT_LOCALE, translationLinks)
     expect(result).toHaveLength(1)
     expect(result[0]).toEqual({ locale: 'cs', href: '/clanky' })
   })
 
   it('handles multiple translation locales', () => {
     const translationLinks = [
-      { locale: 'en', sourceId: 10, path: '/articles' },
-      { locale: 'de', sourceId: 11, path: '/artikel' },
+      { locale: 'en', sourceId: 10, path: 'articles' },
+      { locale: 'de', sourceId: 11, path: 'artikel' },
     ]
-    const result = buildTranslationUrls('/clanky', 'cs', DEFAULT_LOCALE, translationLinks)
+    const result = buildTranslationUrls('cs', DEFAULT_LOCALE, translationLinks)
     expect(result).toHaveLength(2)
     expect(result.find((l) => l.locale === 'en')).toEqual({ locale: 'en', href: '/en/articles' })
     expect(result.find((l) => l.locale === 'de')).toEqual({ locale: 'de', href: '/de/artikel' })
@@ -70,7 +87,7 @@ describe('buildHreflangLinks', () => {
   })
 
   it('x-default points to default locale URL', () => {
-    const translationLinks = [{ locale: 'cs', sourceId: 1, path: '/clanky' }]
+    const translationLinks = [{ locale: 'cs', sourceId: 1, path: 'clanky' }]
     const result = buildHreflangLinks('/articles', 'en', DEFAULT_LOCALE, translationLinks)
     const xDefault = result.find((l) => l.locale === 'x-default')
     expect(xDefault).toEqual({ locale: 'x-default', href: '/clanky' })
@@ -78,8 +95,8 @@ describe('buildHreflangLinks', () => {
 
   it('includes all translation locales', () => {
     const translationLinks = [
-      { locale: 'en', sourceId: 10, path: '/articles' },
-      { locale: 'de', sourceId: 11, path: '/artikel' },
+      { locale: 'en', sourceId: 10, path: 'articles' },
+      { locale: 'de', sourceId: 11, path: 'artikel' },
     ]
     const result = buildHreflangLinks('/clanky', 'cs', DEFAULT_LOCALE, translationLinks)
     const locales = result.map((l) => l.locale)

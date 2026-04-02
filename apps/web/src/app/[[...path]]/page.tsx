@@ -115,7 +115,6 @@ export default async function CatchAllPage() {
 
   // Build locale-aware translation links for LanguageSwitcher
   const translationLinks = buildTranslationUrls(
-    routeInfo.translationLinks?.find((l) => l.locale === locale)?.path ?? '/',
     locale,
     defaultLocale,
     routeInfo.translationLinks ?? [],

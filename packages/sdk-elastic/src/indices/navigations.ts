@@ -32,14 +32,14 @@ export interface Navigation {
   root: NavigationNode
 }
 
-function stripSitePrefix(path: string): string {
-  // Paths from ES include the site prefix, e.g. "/skeleton_fe_localhost/clanky"
-  // Strip the first segment to get the route path: "/clanky"
-  const parts = path.split('/')
-  if (parts.length > 2) {
-    return '/' + parts.slice(2).join('/')
+function normalizePath(path: string): string {
+  if (path === '/' || path.startsWith('http')) {
+    return path
   }
-  return path
+  if (path.startsWith('www.')) {
+    return `https://${path}`
+  }
+  return path.startsWith('/') ? path : `/${path}`
 }
 
 function mapNode(node: EsNavigationNode): NavigationNode {
@@ -47,7 +47,7 @@ function mapNode(node: EsNavigationNode): NavigationNode {
     id: String(node.documentId),
     path: node.path,
     label: node.navigationData.name,
-    href: stripSitePrefix(node.path),
+    href: normalizePath(node.path),
     documentType: node.documentType,
     children: node.children.map(mapNode),
   }
