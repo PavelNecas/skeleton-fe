@@ -33,11 +33,14 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const routeResult = await resolveRoute(site.prefix, resolvedPath, locale)
 
   if (routeResult.kind === 'redirect') {
+    // Normalize flat ES path to URL path
+    const dest = routeResult.destination.startsWith('/')
+      ? routeResult.destination
+      : `/${routeResult.destination}`
+
     // Reconstruct the canonical URL with locale prefix if needed
     const canonicalPath: string =
-      locale !== site.defaultLocale
-        ? `/${locale}${routeResult.destination}`
-        : routeResult.destination
+      locale !== site.defaultLocale ? `/${locale}${dest}` : dest
 
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = canonicalPath

@@ -9,10 +9,13 @@ import type { RouteTranslationLink } from './types'
  * - Secondary locale: /{locale}{path} → `/en/path`
  */
 export function buildLocalizedUrl(path: string, locale: string, defaultLocale: string): string {
+  // Ensure path has leading slash (ES stores flat paths like "clanky")
+  const normalized = path === '/' || path.startsWith('/') ? path : `/${path}`
+
   if (locale === defaultLocale) {
-    return path
+    return normalized
   }
-  return `/${locale}${path}`
+  return `/${locale}${normalized}`
 }
 
 /**

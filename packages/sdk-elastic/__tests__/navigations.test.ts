@@ -30,7 +30,7 @@ const mockEsNavigation = {
     children: [
       {
         documentId: 33,
-        path: '/skeleton_fe_localhost/clanky',
+        path: 'clanky',
         documentType: 'page',
         navigationData: {
           name: 'Články',
@@ -102,7 +102,7 @@ describe('NavigationsIndex', () => {
         modificationDate: 1000000,
         root: {
           documentId: 37,
-          path: '/skeleton_fe_localhost/footer',
+          path: 'footer',
           documentType: 'page',
           navigationData: {
             name: 'Footer',
@@ -141,13 +141,13 @@ describe('NavigationsIndex', () => {
     });
   });
 
-  describe('stripSitePrefix', () => {
-    it('strips site prefix from paths in mapped nodes', async () => {
+  describe('path normalization', () => {
+    it('adds leading slash to flat paths in mapped nodes', async () => {
       mockClient.searchOne.mockResolvedValueOnce(mockEsNavigation);
 
       const result = await navigationsIndex.getByName('skeleton_localhost', 'cs', 'MAIN');
 
-      // "/skeleton_fe_localhost/clanky" → "/clanky"
+      // "clanky" → "/clanky"
       expect(result!.root.children[0].href).toBe('/clanky');
     });
 
@@ -157,6 +157,59 @@ describe('NavigationsIndex', () => {
       const result = await navigationsIndex.getByName('skeleton_localhost', 'cs', 'MAIN');
 
       expect(result!.root.href).toBe('/');
+    });
+
+    it('preserves http URLs and prepends https:// to www. URLs', async () => {
+      const externalNavigation = {
+        ...mockEsNavigation,
+        root: {
+          ...mockEsNavigation.root,
+          children: [
+            {
+              documentId: 99,
+              path: 'https://example.com',
+              documentType: 'page',
+              navigationData: {
+                name: 'External',
+                title: null,
+                cssClass: null,
+                target: '_blank',
+                anchor: null,
+                parameters: null,
+                exclude: false,
+                relation: null,
+                accesskey: null,
+                tabindex: null,
+              },
+              children: [],
+            },
+            {
+              documentId: 100,
+              path: 'www.example.com',
+              documentType: 'page',
+              navigationData: {
+                name: 'WWW External',
+                title: null,
+                cssClass: null,
+                target: null,
+                anchor: null,
+                parameters: null,
+                exclude: false,
+                relation: null,
+                accesskey: null,
+                tabindex: null,
+              },
+              children: [],
+            },
+          ],
+        },
+      };
+      mockClient.searchOne.mockResolvedValueOnce(externalNavigation);
+
+      const result = await navigationsIndex.getByName('skeleton_localhost', 'cs', 'MAIN');
+
+      expect(result!.root.children[0].href).toBe('https://example.com');
+      expect(result!.root.children[1].href).toBe('https://www.example.com');
     });
   });
 });
