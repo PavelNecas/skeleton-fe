@@ -32,6 +32,7 @@ import ContentPage from '../Cms/Page/Default'
 const mockRoute: RouteInfo = {
   sourceId: 2,
   sourceType: 'document',
+  objectType: 'Page',
   controllerTemplate: 'Cms:Page:default',
   translationLinks: [],
 }

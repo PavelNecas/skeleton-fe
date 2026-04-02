@@ -26,6 +26,7 @@ export interface RouteResolution {
   kind: 'route'
   sourceId: number
   sourceType: string
+  objectType: string
   controllerTemplate: string
   path: string
   translationLinks: EsTranslationLink[]
@@ -76,6 +77,7 @@ export async function resolveRoute(
       kind: 'route',
       sourceId: route.sourceId,
       sourceType: route.sourceType,
+      objectType: route.objectType,
       controllerTemplate: route.controllerTemplate,
       path: route.path,
       translationLinks: route.translationLinks ?? [],
@@ -97,6 +99,7 @@ export async function resolveRoute(
         kind: 'route',
         sourceId: homepageByLocale.sourceId,
         sourceType: homepageByLocale.sourceType,
+        objectType: homepageByLocale.objectType,
         controllerTemplate: homepageByLocale.controllerTemplate,
         path: homepageByLocale.path,
         translationLinks: homepageByLocale.translationLinks ?? [],

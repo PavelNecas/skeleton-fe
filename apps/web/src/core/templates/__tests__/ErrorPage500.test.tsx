@@ -15,6 +15,7 @@ import ErrorPage500 from '../Cms/ErrorPage/ServerError'
 const mockRoute: RouteInfo = {
   sourceId: 0,
   sourceType: 'document',
+  objectType: 'Page',
   controllerTemplate: 'Cms:ErrorPage:serverError',
   translationLinks: [],
 }

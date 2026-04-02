@@ -23,6 +23,7 @@ export interface MiddlewareHeaders {
 export interface RouteInfo {
   sourceId: number
   sourceType: string
+  objectType: string
   controllerTemplate: string
   translationLinks: RouteTranslationLink[]
 }

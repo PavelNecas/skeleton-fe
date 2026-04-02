@@ -15,6 +15,7 @@ import ErrorPage404 from '../Cms/ErrorPage/NotFound'
 const mockRoute: RouteInfo = {
   sourceId: 0,
   sourceType: 'document',
+  objectType: 'Page',
   controllerTemplate: 'Cms:ErrorPage:notFound',
   translationLinks: [],
 }
