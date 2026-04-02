@@ -22,8 +22,8 @@ Request: GET skeleton-fe.localhost/en/about-us
     │
     ▼
 3. ROUTE RESOLUTION
-   ES query: skeleton_localhost_routes WHERE path = "/about-us" AND published = true
-   Result: { sourceId, sourceType, controllerTemplate, locale, translationLinks, aliases }
+   ES query: skeleton_localhost_routes WHERE path = "about-us" AND locale AND published = true
+   Result: { sourceId, sourceType, objectType, controllerTemplate, locale, translationLinks, aliases }
     │
     ▼
 4. ALIAS CHECK
@@ -50,9 +50,10 @@ Request: GET skeleton-fe.localhost/en/about-us
 
 Server Component that:
 1. Reads headers set by middleware (x-site-prefix, x-locale, x-route, x-template)
-2. Fetches data from appropriate ES index based on `sourceType`:
-   - `"document"` → `{prefix}_pages_{locale}` WHERE id = sourceId
-   - `"object"` → `{prefix}_articles_{locale}` WHERE id = sourceId
+2. Fetches data from appropriate ES index based on `objectType`:
+   - `"Page"` → `{prefix}_pages_{locale}` WHERE id = sourceId
+   - `"Article"` → `{prefix}_articles_{locale}` WHERE id = sourceId
+   - `"Hardlink"` → `{prefix}_hardlinks_{locale}` + `{prefix}_pages_{locale}` (fetches both, merges into composite Page)
 3. Resolves template component from template registry
 4. Checks for site-specific template override
 5. Renders inside MainLayout with navigation data

@@ -84,6 +84,10 @@ class ElasticClient {
 **ArticlesIndex:**
 - `findById(sitePrefix, locale, id)` → search `{sitePrefix}_articles_{locale}` WHERE id
 
+**HardlinksIndex:**
+- `findById(sitePrefix, locale, id)` → search `{sitePrefix}_hardlinks_{locale}` WHERE id
+- `findByPath(sitePrefix, locale, path)` → search WHERE path + published
+
 **NavigationsIndex:**
 - `getByName(sitePrefix, menuDocumentName)` → search `{sitePrefix}_navigations` WHERE menuDocumentName
 
