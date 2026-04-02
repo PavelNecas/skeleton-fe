@@ -33,6 +33,15 @@ describe('buildLocalizedUrl', () => {
   it('handles root path for non-default locale', () => {
     expect(buildLocalizedUrl('/', 'en', DEFAULT_LOCALE)).toBe('/en/')
   })
+
+  it('handles non-default locale homepage where path equals locale code', () => {
+    // EN homepage in ES has path "en" — should produce /en, not /en/en
+    expect(buildLocalizedUrl('en', 'en', DEFAULT_LOCALE)).toBe('/en')
+  })
+
+  it('handles default locale homepage where path equals locale code', () => {
+    expect(buildLocalizedUrl('cs', 'cs', DEFAULT_LOCALE)).toBe('/')
+  })
 })
 
 describe('buildTranslationUrls', () => {
