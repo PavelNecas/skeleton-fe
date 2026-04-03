@@ -69,7 +69,7 @@ class ElasticClient {
 **ContentBlock** — polymorphic, for objects (articles):
 - `CrossroadContentBlock` (`type: 'crossroad-block'`) — `order`, `items[]` (with `reverseContent`)
 - `HighlightContentBlock` (`type: 'highlight'`) — `order`, `items[]`
-- `ImageContentBlock` (`type: 'image'`) — `order`, `imageId`
+- `ImageContentBlock` (`type: 'image'`) — `order`, `image: PimcoreImage | null`
 
 ### Key Query Builders
 

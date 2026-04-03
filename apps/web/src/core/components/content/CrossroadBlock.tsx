@@ -1,8 +1,7 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import type { CrossroadBlockEditable, CrossroadContentBlock } from '@skeleton-fe/sdk-elastic'
 
-import { getImageUrl } from '@/core/utils/image'
+import { PimcoreImage } from '@/core/components/PimcoreImage'
 
 export interface CrossroadBlockProps {
   block: CrossroadBlockEditable | CrossroadContentBlock
@@ -13,7 +12,6 @@ export function CrossroadBlock({ block }: CrossroadBlockProps) {
     <section className="py-8">
       <div className="space-y-12">
         {block.items.map((item, index) => {
-          const imageUrl = getImageUrl(item.imageId)
           const reverse =
             'reverseContent' in item ? item.reverseContent : item.imagePosition === 'right'
 
@@ -24,9 +22,9 @@ export function CrossroadBlock({ block }: CrossroadBlockProps) {
                 reverse ? 'md:flex-row-reverse' : ''
               }`}
             >
-              {imageUrl && (
+              {item.image && (
                 <div className="relative aspect-video w-full md:w-1/2">
-                  <Image src={imageUrl} alt={item.title} fill className="rounded-lg object-cover" />
+                  <PimcoreImage image={item.image} className="rounded-lg object-cover w-full h-full" />
                 </div>
               )}
               <div className="flex flex-1 flex-col gap-4">

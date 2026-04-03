@@ -24,6 +24,24 @@ export interface RelationProperty {
 export type Property = TextProperty | BoolProperty | RelationProperty
 
 // ============================================================
+// Image — responsive image data from Pimcore thumbnails
+// ============================================================
+
+export interface ImageSource {
+  type: string
+  srcset: string
+  media: string | null
+}
+
+export interface PimcoreImage {
+  src: string
+  alt: string
+  sources: ImageSource[]
+  width: number
+  height: number
+}
+
+// ============================================================
 // Editable — polymorphic, for documents (pages, snippets, emails)
 // ============================================================
 
@@ -33,7 +51,7 @@ export interface CrossroadBlockItem {
   imagePosition: string
   linkHref: string | null
   linkText: string | null
-  imageId: number | null
+  image: PimcoreImage | null
 }
 
 export interface RichTextEditable {
@@ -60,13 +78,13 @@ export interface CrossroadContentItem {
   reverseContent: boolean
   linkHref: string | null
   linkText: string | null
-  imageId: number | null
+  image: PimcoreImage | null
 }
 
 export interface HighlightContentItem {
   title: string
   text: string
-  imageId: number | null
+  image: PimcoreImage | null
 }
 
 export interface CrossroadContentBlock {
@@ -84,7 +102,7 @@ export interface HighlightContentBlock {
 export interface ImageContentBlock {
   type: 'image'
   order: number
-  imageId: number | null
+  image: PimcoreImage | null
 }
 
 export type ContentBlock = CrossroadContentBlock | HighlightContentBlock | ImageContentBlock

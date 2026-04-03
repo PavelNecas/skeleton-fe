@@ -54,9 +54,9 @@ Renderers for editables (documents) and contentBlocks (articles) from ES.
 |-----------|---------|-----------|
 | `BlockRenderer` | — | Dispatcher: sorts by `order`, switches on `type` → component |
 | `RichTextBlock` | `rich-text` | `content` (HTML string) |
-| `CrossroadBlock` | `crossroad-block` | `items[]` with title, text, imagePosition/reverseContent, link, imageId |
-| `HighlightBlock` | `highlight` | `items[]` with title, text, imageId |
-| `ImageBlock` | `image` | `imageId` |
+| `CrossroadBlock` | `crossroad-block` | `items[]` with title, text, imagePosition/reverseContent, link, image |
+| `HighlightBlock` | `highlight` | `items[]` with title, text, image |
+| `ImageBlock` | `image` | `image: PimcoreImage \| null` |
 
 **BlockRenderer pattern:**
 ```tsx
