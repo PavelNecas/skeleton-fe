@@ -8,7 +8,11 @@ const mockImage = {
   src: '/images/10/image-thumb__10__Highlight/photo.jpg',
   alt: 'Feature photo',
   sources: [
-    { type: 'image/webp', srcset: '/images/10/image-thumb__10__Highlight/photo.webp 1x', media: null },
+    {
+      type: 'image/webp',
+      srcset: '/images/10/image-thumb__10__Highlight/photo.webp 1x',
+      media: null,
+    },
   ],
   width: 400,
   height: 300,

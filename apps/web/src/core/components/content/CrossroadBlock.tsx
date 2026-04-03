@@ -24,7 +24,10 @@ export function CrossroadBlock({ block }: CrossroadBlockProps) {
             >
               {item.image && (
                 <div className="relative aspect-video w-full md:w-1/2">
-                  <PimcoreImage image={item.image} className="rounded-lg object-cover w-full h-full" />
+                  <PimcoreImage
+                    image={item.image}
+                    className="rounded-lg object-cover w-full h-full"
+                  />
                 </div>
               )}
               <div className="flex flex-1 flex-col gap-4">

@@ -3,7 +3,7 @@ import type { Navigation, NavigationNode } from '@skeleton-fe/sdk-elastic'
 
 // Mock next/cache — pass through without actual caching
 vi.mock('next/cache', () => ({
-  unstable_cache: (fn: Function) => fn,
+  unstable_cache: (fn: (...args: unknown[]) => unknown) => fn,
 }))
 
 // Mock the elastic client module
@@ -66,7 +66,14 @@ const mockFooterNavigation: Navigation = {
     href: null,
     documentType: null,
     children: [
-      { id: '3', path: '/contact', label: 'Contact', href: '/contact', documentType: 'page', children: [] },
+      {
+        id: '3',
+        path: '/contact',
+        label: 'Contact',
+        href: '/contact',
+        documentType: 'page',
+        children: [],
+      },
     ],
   },
 }

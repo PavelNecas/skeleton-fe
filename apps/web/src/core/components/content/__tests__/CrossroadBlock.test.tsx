@@ -14,7 +14,11 @@ const mockImage = {
   src: '/images/5/image-thumb__5__CrossRoadBlock/photo.jpg',
   alt: 'Photo',
   sources: [
-    { type: 'image/webp', srcset: '/images/5/image-thumb__5__CrossRoadBlock/photo.webp 1x', media: null },
+    {
+      type: 'image/webp',
+      srcset: '/images/5/image-thumb__5__CrossRoadBlock/photo.webp 1x',
+      media: null,
+    },
   ],
   width: 750,
   height: 300,

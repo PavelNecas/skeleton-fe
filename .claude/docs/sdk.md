@@ -89,7 +89,7 @@ class ElasticClient {
 - `findByPath(sitePrefix, locale, path)` → search WHERE path + published
 
 **NavigationsIndex:**
-- `getByName(sitePrefix, menuDocumentName)` → search `{sitePrefix}_navigations` WHERE menuDocumentName
+- `getByName(sitePrefix, locale, menuDocumentName)` → search `{sitePrefix}_navigations_{locale}` WHERE menuDocumentName
 
 **SitesIndex:**
 - `findByDomain(sitePrefix, domain)` → search `{sitePrefix}_sites` WHERE mainDomain

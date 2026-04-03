@@ -88,7 +88,8 @@ describe('resolveRoute', () => {
     const [index, query] = mockEsSearchOne.mock.calls[0] as [string, Record<string, unknown>]
     expect(index).toBe('my_prefix_routes')
     // Verify locale filter is included in the query
-    const must = (query as { query: { bool: { must: Array<Record<string, unknown>> } } }).query.bool.must
+    const must = (query as { query: { bool: { must: Array<Record<string, unknown>> } } }).query.bool
+      .must
     expect(must).toContainEqual({ term: { locale: LOCALE } })
   })
 

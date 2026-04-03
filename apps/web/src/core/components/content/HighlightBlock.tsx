@@ -17,7 +17,10 @@ export function HighlightBlock({ block }: HighlightBlockProps) {
           >
             {item.image && (
               <div className="relative aspect-video w-full">
-                <PimcoreImage image={item.image} className="rounded-md object-cover w-full h-full" />
+                <PimcoreImage
+                  image={item.image}
+                  className="rounded-md object-cover w-full h-full"
+                />
               </div>
             )}
             <h3 className="text-lg font-semibold">{item.title}</h3>

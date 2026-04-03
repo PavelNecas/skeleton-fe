@@ -75,7 +75,13 @@ describe('BlockRenderer', () => {
   })
 
   it('renders an image block', () => {
-    const blocks: ContentBlock[] = [{ type: 'image', order: 1, image: { src: '/images/99/thumb.jpg', alt: 'Test', sources: [], width: 1200, height: 630 } }]
+    const blocks: ContentBlock[] = [
+      {
+        type: 'image',
+        order: 1,
+        image: { src: '/images/99/thumb.jpg', alt: 'Test', sources: [], width: 1200, height: 630 },
+      },
+    ]
 
     const { container } = render(<BlockRenderer blocks={blocks} />)
     const picture = container.querySelector('picture')

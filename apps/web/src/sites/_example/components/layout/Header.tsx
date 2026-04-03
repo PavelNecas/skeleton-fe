@@ -30,7 +30,11 @@ export default function ExampleHeader({
           <Link href="/" className="text-lg font-bold hover:opacity-80 transition-opacity">
             {siteName}
           </Link>
-          <Navigation nodes={navigationNodes} currentLocale={currentLocale} defaultLocale={defaultLocale} />
+          <Navigation
+            nodes={navigationNodes}
+            currentLocale={currentLocale}
+            defaultLocale={defaultLocale}
+          />
         </div>
         <LanguageSwitcher currentLocale={currentLocale} links={translationLinks} />
       </div>
