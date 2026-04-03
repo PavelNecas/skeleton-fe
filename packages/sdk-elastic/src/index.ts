@@ -8,6 +8,8 @@ export type {
   TextProperty,
   BoolProperty,
   RelationProperty,
+  ImageSource,
+  PimcoreImage,
   Editable,
   RichTextEditable,
   CrossroadBlockEditable,

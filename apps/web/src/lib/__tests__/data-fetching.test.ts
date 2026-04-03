@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { Article, Hardlink, Page, TextProperty } from '@skeleton-fe/sdk-elastic'
+import type * as ReactTypes from 'react'
 
 // Mock React.cache to be a pass-through so we can call fetchPageData normally in tests
 vi.mock('react', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('react')>()
+  const actual = await importOriginal<typeof ReactTypes>()
   return { ...actual, cache: (fn: unknown) => fn }
 })
 
@@ -13,6 +14,7 @@ vi.mock('@/lib/elastic-client', () => ({
 }))
 
 import { getElasticClient } from '@/lib/elastic-client'
+
 import { fetchPageData } from '../data-fetching'
 import type { RouteInfo } from '../types'
 

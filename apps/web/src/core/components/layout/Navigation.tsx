@@ -35,16 +35,27 @@ function NodeLink({ node, currentLocale, defaultLocale }: NodeItemProps) {
   }
 
   return (
-    <Link href={href} className="block px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-md transition-colors">
+    <Link
+      href={href}
+      className="block px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+    >
       {label}
     </Link>
   )
 }
 
-function ChildList({ children, currentLocale, defaultLocale }: { children: NavigationNode[]; currentLocale: string; defaultLocale: string }) {
+function ChildList({
+  nodes,
+  currentLocale,
+  defaultLocale,
+}: {
+  nodes: NavigationNode[]
+  currentLocale: string
+  defaultLocale: string
+}) {
   return (
     <ul className="grid gap-1 p-2 w-[200px]">
-      {children.map((child) => (
+      {nodes.map((child) => (
         <li key={child.id}>
           <NavigationMenuLink asChild>
             <NodeLink node={child} currentLocale={currentLocale} defaultLocale={defaultLocale} />
@@ -54,7 +65,11 @@ function ChildList({ children, currentLocale, defaultLocale }: { children: Navig
               {child.children.map((grandchild) => (
                 <li key={grandchild.id}>
                   <NavigationMenuLink asChild>
-                    <NodeLink node={grandchild} currentLocale={currentLocale} defaultLocale={defaultLocale} />
+                    <NodeLink
+                      node={grandchild}
+                      currentLocale={currentLocale}
+                      defaultLocale={defaultLocale}
+                    />
                   </NavigationMenuLink>
                 </li>
               ))}
@@ -76,7 +91,9 @@ export function Navigation({ nodes, currentLocale, defaultLocale }: NavigationPr
       <NavigationMenuList>
         {nodes.map((node) => {
           const label = node.label ?? node.id
-          const href = node.href ? buildNavigationUrl(node.href, currentLocale, defaultLocale) : undefined
+          const href = node.href
+            ? buildNavigationUrl(node.href, currentLocale, defaultLocale)
+            : undefined
 
           if (node.children.length === 0) {
             return (
@@ -107,7 +124,7 @@ export function Navigation({ nodes, currentLocale, defaultLocale }: NavigationPr
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ChildList
-                  children={node.children}
+                  nodes={node.children}
                   currentLocale={currentLocale}
                   defaultLocale={defaultLocale}
                 />

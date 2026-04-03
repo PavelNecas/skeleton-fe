@@ -95,7 +95,7 @@ describe('Editable discriminated union deserialization', () => {
           imagePosition: 'left',
           linkHref: '/link',
           linkText: 'Read more',
-          imageId: 10,
+          image: { src: '/images/10/thumb.jpg', alt: 'Test', sources: [], width: 800, height: 600 },
         },
       ],
     };
@@ -122,7 +122,7 @@ describe('ContentBlock discriminated union deserialization', () => {
           reverseContent: true,
           linkHref: null,
           linkText: null,
-          imageId: null,
+          image: null,
         },
       ],
     };
@@ -140,7 +140,7 @@ describe('ContentBlock discriminated union deserialization', () => {
       type: 'highlight',
       order: 2,
       items: [
-        { title: 'Highlight', text: 'Content', imageId: 5 },
+        { title: 'Highlight', text: 'Content', image: { src: '/images/5/thumb.jpg', alt: 'Highlight', sources: [], width: 400, height: 300 } },
       ],
     };
     const block = raw as ContentBlock;
@@ -148,27 +148,27 @@ describe('ContentBlock discriminated union deserialization', () => {
     expect(block.type).toBe('highlight');
     if (block.type === 'highlight') {
       const highlight = block as HighlightContentBlock;
-      expect(highlight.items[0].imageId).toBe(5);
+      expect(highlight.items[0].image?.src).toBe('/images/5/thumb.jpg');
     }
   });
 
   it('deserializes an ImageContentBlock from raw JSON', () => {
-    const raw: unknown = { type: 'image', order: 3, imageId: 99 };
+    const raw: unknown = { type: 'image', order: 3, image: { src: '/images/99/thumb.jpg', alt: 'Image block', sources: [], width: 1200, height: 630 } };
     const block = raw as ContentBlock;
 
     expect(block.type).toBe('image');
     if (block.type === 'image') {
       const image = block as ImageContentBlock;
-      expect(image.imageId).toBe(99);
+      expect(image.image?.src).toBe('/images/99/thumb.jpg');
     }
   });
 
-  it('deserializes an ImageContentBlock with null imageId', () => {
-    const raw: unknown = { type: 'image', order: 1, imageId: null };
+  it('deserializes an ImageContentBlock with null image', () => {
+    const raw: unknown = { type: 'image', order: 1, image: null };
     const block = raw as ContentBlock;
 
     if (block.type === 'image') {
-      expect(block.imageId).toBeNull();
+      expect(block.image).toBeNull();
     }
   });
 });

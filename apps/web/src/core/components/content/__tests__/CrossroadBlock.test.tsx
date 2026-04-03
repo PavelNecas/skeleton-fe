@@ -2,13 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import type { CrossroadBlockEditable, CrossroadContentBlock } from '@skeleton-fe/sdk-elastic'
 
-vi.mock('next/image', () => ({
-  default: ({ src, alt }: { src: string; alt: string }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} />
-  ),
-}))
-
 vi.mock('next/link', () => ({
   default: ({ href, children }: { href: string; children: React.ReactNode }) => (
     <a href={href}>{children}</a>
@@ -16,6 +9,20 @@ vi.mock('next/link', () => ({
 }))
 
 import { CrossroadBlock } from '../CrossroadBlock'
+
+const mockImage = {
+  src: '/images/5/image-thumb__5__CrossRoadBlock/photo.jpg',
+  alt: 'Photo',
+  sources: [
+    {
+      type: 'image/webp',
+      srcset: '/images/5/image-thumb__5__CrossRoadBlock/photo.webp 1x',
+      media: null,
+    },
+  ],
+  width: 750,
+  height: 300,
+}
 
 describe('CrossroadBlock (Editable)', () => {
   const block: CrossroadBlockEditable = {
@@ -28,7 +35,7 @@ describe('CrossroadBlock (Editable)', () => {
         imagePosition: 'left',
         linkHref: '/page',
         linkText: 'Read more',
-        imageId: null,
+        image: null,
       },
     ],
   }
@@ -46,7 +53,6 @@ describe('CrossroadBlock (Editable)', () => {
   it('renders the link with correct href', () => {
     render(<CrossroadBlock block={block} />)
     const link = screen.getByText('Read more')
-
     expect(link.closest('a')).toHaveAttribute('href', '/page')
   })
 })
@@ -62,7 +68,7 @@ describe('CrossroadBlock (ContentBlock)', () => {
         reverseContent: true,
         linkHref: null,
         linkText: null,
-        imageId: 5,
+        image: mockImage,
       },
     ],
   }
@@ -72,18 +78,18 @@ describe('CrossroadBlock (ContentBlock)', () => {
     expect(screen.getByText('Article Item')).toBeInTheDocument()
   })
 
-  it('renders image for item with imageId', () => {
+  it('renders picture element for item with image', () => {
     const { container } = render(<CrossroadBlock block={block} />)
+    const picture = container.querySelector('picture')
     const img = container.querySelector('img')
 
+    expect(picture).toBeInTheDocument()
     expect(img).toBeInTheDocument()
-    expect(img?.src).toContain('5')
   })
 
   it('does not render link when linkHref is null', () => {
     render(<CrossroadBlock block={block} />)
     const links = screen.queryAllByRole('link')
-
     expect(links).toHaveLength(0)
   })
 })

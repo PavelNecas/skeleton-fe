@@ -39,8 +39,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       : `/${routeResult.destination}`
 
     // Reconstruct the canonical URL with locale prefix if needed
-    const canonicalPath: string =
-      locale !== site.defaultLocale ? `/${locale}${dest}` : dest
+    const canonicalPath: string = locale !== site.defaultLocale ? `/${locale}${dest}` : dest
 
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = canonicalPath

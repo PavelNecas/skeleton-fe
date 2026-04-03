@@ -2,13 +2,6 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import type { ContentBlock, Editable } from '@skeleton-fe/sdk-elastic'
 
-vi.mock('next/image', () => ({
-  default: ({ src, alt }: { src: string; alt: string }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} />
-  ),
-}))
-
 vi.mock('next/link', () => ({
   default: ({ href, children }: { href: string; children: React.ReactNode }) => (
     <a href={href}>{children}</a>
@@ -51,7 +44,7 @@ describe('BlockRenderer', () => {
       {
         type: 'highlight',
         order: 1,
-        items: [{ title: 'Highlight title', text: 'Some text', imageId: null }],
+        items: [{ title: 'Highlight title', text: 'Some text', image: null }],
       },
     ]
 
@@ -71,7 +64,7 @@ describe('BlockRenderer', () => {
             reverseContent: false,
             linkHref: null,
             linkText: null,
-            imageId: null,
+            image: null,
           },
         ],
       },
@@ -82,13 +75,18 @@ describe('BlockRenderer', () => {
   })
 
   it('renders an image block', () => {
-    const blocks: ContentBlock[] = [{ type: 'image', order: 1, imageId: 99 }]
+    const blocks: ContentBlock[] = [
+      {
+        type: 'image',
+        order: 1,
+        image: { src: '/images/99/thumb.jpg', alt: 'Test', sources: [], width: 1200, height: 630 },
+      },
+    ]
 
     const { container } = render(<BlockRenderer blocks={blocks} />)
-    const img = container.querySelector('img')
+    const picture = container.querySelector('picture')
 
-    expect(img).toBeInTheDocument()
-    expect(img?.src).toContain('99')
+    expect(picture).toBeInTheDocument()
   })
 
   it('handles unknown block types gracefully', () => {

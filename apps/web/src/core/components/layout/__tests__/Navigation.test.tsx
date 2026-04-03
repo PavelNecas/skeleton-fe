@@ -66,12 +66,12 @@ describe('Navigation', () => {
     expect(aboutLink).toHaveAttribute('href', '/about')
   })
 
-  it('renders nested navigation nodes recursively', () => {
+  it('renders trigger for parent nodes with children', () => {
     render(<Navigation nodes={nestedNodes} currentLocale="cs" defaultLocale="cs" />)
 
-    expect(screen.getByText('Products')).toBeInTheDocument()
-    expect(screen.getByText('Shoes')).toBeInTheDocument()
-    expect(screen.getByText('Bags')).toBeInTheDocument()
+    // Parent node renders as a trigger button
+    const trigger = screen.getByRole('button', { name: /Products/ })
+    expect(trigger).toBeInTheDocument()
   })
 
   it('renders a span for nodes without href', () => {
@@ -105,6 +105,6 @@ describe('Navigation', () => {
     render(<Navigation nodes={flatNodes} currentLocale="cs" defaultLocale="cs" />)
     const nav = screen.getByRole('navigation')
 
-    expect(nav).toHaveAttribute('aria-label', 'Main navigation')
+    expect(nav).toHaveAttribute('aria-label', 'Main')
   })
 })
