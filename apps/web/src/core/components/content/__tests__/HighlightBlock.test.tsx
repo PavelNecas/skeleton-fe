@@ -7,6 +7,7 @@ import { HighlightBlock } from '../HighlightBlock'
 const mockImage = {
   src: '/images/10/image-thumb__10__Highlight/photo.jpg',
   alt: 'Feature photo',
+  title: 'Test title',
   sources: [
     {
       type: 'image/webp',

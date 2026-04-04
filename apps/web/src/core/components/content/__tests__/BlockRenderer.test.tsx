@@ -79,7 +79,7 @@ describe('BlockRenderer', () => {
       {
         type: 'image',
         order: 1,
-        image: { src: '/images/99/thumb.jpg', alt: 'Test', sources: [], width: 1200, height: 630 },
+        image: { src: '/images/99/thumb.jpg', alt: 'Test', title: '', sources: [], width: 1200, height: 630 },
       },
     ]
 

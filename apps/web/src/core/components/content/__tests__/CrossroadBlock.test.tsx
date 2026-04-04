@@ -13,6 +13,7 @@ import { CrossroadBlock } from '../CrossroadBlock'
 const mockImage = {
   src: '/images/5/image-thumb__5__CrossRoadBlock/photo.jpg',
   alt: 'Photo',
+  title: 'Test title',
   sources: [
     {
       type: 'image/webp',

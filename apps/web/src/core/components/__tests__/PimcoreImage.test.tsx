@@ -7,6 +7,7 @@ import { PimcoreImage } from '../PimcoreImage'
 const mockImage: PimcoreImageType = {
   src: '/images/42/image-thumb__42__default/photo.jpg',
   alt: 'Test photo',
+  title: 'Test photo title',
   sources: [
     {
       type: 'image/avif',
@@ -72,6 +73,21 @@ describe('PimcoreImage', () => {
       const img = container.querySelector('img')
 
       expect(img?.getAttribute('class')).toBe('rounded-lg')
+    })
+
+    it('renders title attribute when title is non-empty', () => {
+      const { container } = render(<PimcoreImage image={mockImage} />)
+      const img = container.querySelector('img')
+
+      expect(img?.getAttribute('title')).toBe('Test photo title')
+    })
+
+    it('omits title attribute when title is empty string', () => {
+      const imageNoTitle: PimcoreImageType = { ...mockImage, title: '' }
+      const { container } = render(<PimcoreImage image={imageNoTitle} />)
+      const img = container.querySelector('img')
+
+      expect(img?.hasAttribute('title')).toBe(false)
     })
 
     it('filters out sources with empty srcset', () => {

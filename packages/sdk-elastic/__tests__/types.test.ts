@@ -95,7 +95,7 @@ describe('Editable discriminated union deserialization', () => {
           imagePosition: 'left',
           linkHref: '/link',
           linkText: 'Read more',
-          image: { src: '/images/10/thumb.jpg', alt: 'Test', sources: [], width: 800, height: 600 },
+          image: { src: '/images/10/thumb.jpg', alt: 'Test', title: '', sources: [], width: 800, height: 600 },
         },
       ],
     };
@@ -140,7 +140,7 @@ describe('ContentBlock discriminated union deserialization', () => {
       type: 'highlight',
       order: 2,
       items: [
-        { title: 'Highlight', text: 'Content', image: { src: '/images/5/thumb.jpg', alt: 'Highlight', sources: [], width: 400, height: 300 } },
+        { title: 'Highlight', text: 'Content', image: { src: '/images/5/thumb.jpg', alt: 'Highlight', title: '', sources: [], width: 400, height: 300 } },
       ],
     };
     const block = raw as ContentBlock;
@@ -153,7 +153,7 @@ describe('ContentBlock discriminated union deserialization', () => {
   });
 
   it('deserializes an ImageContentBlock from raw JSON', () => {
-    const raw: unknown = { type: 'image', order: 3, image: { src: '/images/99/thumb.jpg', alt: 'Image block', sources: [], width: 1200, height: 630 } };
+    const raw: unknown = { type: 'image', order: 3, image: { src: '/images/99/thumb.jpg', alt: 'Image block', title: '', sources: [], width: 1200, height: 630 } };
     const block = raw as ContentBlock;
 
     expect(block.type).toBe('image');

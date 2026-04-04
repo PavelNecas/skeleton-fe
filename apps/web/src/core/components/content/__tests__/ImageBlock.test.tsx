@@ -7,6 +7,7 @@ import { ImageBlock } from '../ImageBlock'
 const mockImage = {
   src: '/images/42/image-thumb__42__ImageBlock/photo.jpg',
   alt: 'Test photo',
+  title: 'Test title',
   sources: [
     {
       type: 'image/avif',

@@ -36,6 +36,7 @@ export interface ImageSource {
 export interface PimcoreImage {
   src: string
   alt: string
+  title: string
   sources: ImageSource[]
   width: number
   height: number

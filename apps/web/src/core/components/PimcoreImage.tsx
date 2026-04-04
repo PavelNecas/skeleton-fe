@@ -36,6 +36,7 @@ export function PimcoreImage({ image, className }: Props) {
       <img
         src={`${base}${image.src}`}
         alt={image.alt}
+        {...(image.title ? { title: image.title } : {})}
         width={image.width}
         height={image.height}
         className={className}
