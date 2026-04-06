@@ -147,8 +147,12 @@ describe('fetchPageData', () => {
         frontendTemplate: null,
         modificationDate: 1700000000,
         creationDate: 1700000000,
+        publishedDate: 1700000000,
         properties: [],
         contentBlocks: [],
+        categories: [],
+        authors: [],
+        images: { articleCard: null, openGraph: null, socialSquare: null },
       }
       mockFindArticleById.mockResolvedValue(article)
 

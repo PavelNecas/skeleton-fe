@@ -79,7 +79,13 @@ export async function generateMetadata(): Promise<Metadata> {
  * resolves the correct template component (with site-override support),
  * and renders it wrapped in MainLayout.
  */
-export default async function CatchAllPage() {
+export default async function CatchAllPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ path?: string[] }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
   const headersList = await headers()
   const parsed = parseMiddlewareHeaders(headersList)
 
@@ -94,6 +100,10 @@ export default async function CatchAllPage() {
   if (!routeInfo) {
     notFound()
   }
+
+  const resolvedParams = await params
+  const pathname = '/' + (resolvedParams.path?.join('/') ?? '')
+  const resolvedSearchParams = await searchParams
 
   // Fetch page data, navigations, and site config in parallel
   const [data, navigations, siteConfig] = await Promise.all([
@@ -129,7 +139,14 @@ export default async function CatchAllPage() {
       translationLinks={translationLinks}
       theme={siteConfig.theme}
     >
-      <Template data={data} route={routeInfo} locale={locale} sitePrefix={sitePrefix} />
+      <Template
+        data={data}
+        route={routeInfo}
+        locale={locale}
+        sitePrefix={sitePrefix}
+        searchParams={resolvedSearchParams}
+        pathname={pathname}
+      />
     </MainLayout>
   )
 }

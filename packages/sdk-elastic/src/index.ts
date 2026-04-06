@@ -1,6 +1,6 @@
 // Client
 export { ElasticClient } from './client'
-export type { ElasticClientConfig } from './client'
+export type { ElasticClientConfig, SearchWithTotalResult } from './client'
 
 // Shared types
 export type {
@@ -36,7 +36,13 @@ export { PagesIndex } from './indices/pages'
 export type { Page } from './indices/pages'
 
 export { ArticlesIndex } from './indices/articles'
-export type { Article } from './indices/articles'
+export type {
+  Article,
+  ArticleCategory,
+  ArticleImages,
+  ArticleListingParams,
+  ArticleListingResult,
+} from './indices/articles'
 
 export { NavigationsIndex } from './indices/navigations'
 export type { Navigation, NavigationNode } from './indices/navigations'

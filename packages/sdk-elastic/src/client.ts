@@ -9,6 +9,11 @@ import { SnippetsIndex } from './indices/snippets'
 import { LinksIndex } from './indices/links'
 import { HardlinksIndex } from './indices/hardlinks'
 
+export interface SearchWithTotalResult<T> {
+  items: T[]
+  total: number
+}
+
 export interface ElasticClientConfig {
   url: string
   username: string
@@ -49,6 +54,33 @@ export class ElasticClient {
   async searchOne<T>(index: string, query: object): Promise<T | null> {
     const results = await this.search<T>(index, query)
     return results[0] ?? null
+  }
+
+  async searchWithTotal<T>(index: string, query: object): Promise<SearchWithTotalResult<T>> {
+    const response = await this.esClient.search<T>({
+      index,
+      ...query,
+    })
+
+    const total =
+      typeof response.hits.total === 'number'
+        ? response.hits.total
+        : (response.hits.total?.value ?? 0)
+
+    return {
+      items: response.hits.hits.map((hit) => hit._source as T),
+      total,
+    }
+  }
+
+  async aggregate(index: string, query: object): Promise<Record<string, unknown>> {
+    const response = await this.esClient.search({
+      index,
+      size: 0,
+      ...query,
+    })
+
+    return (response.aggregations ?? {}) as Record<string, unknown>
   }
 
   get routes(): RoutesIndex {

@@ -25,17 +25,20 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-import type { RouteInfo, TemplateProps } from '@/lib/types'
+vi.mock('@/lib/data-fetching', () => ({
+  fetchArticleListing: vi.fn().mockResolvedValue({
+    items: [],
+    total: 0,
+    page: 1,
+    perPage: 10,
+    totalPages: 0,
+  }),
+  fetchArticleCategories: vi.fn().mockResolvedValue([]),
+}))
+
+import type { TemplateProps } from '@/lib/types'
 
 import ContentArticles from '../Cms/Articles/Default'
-
-const mockRoute: RouteInfo = {
-  sourceId: 10,
-  sourceType: 'document',
-  objectType: 'Page',
-  controllerTemplate: 'Cms:Articles:default',
-  translationLinks: [],
-}
 
 const mockPage: Page = {
   id: '10',
@@ -74,36 +77,50 @@ const mockPage: Page = {
   editables: [],
 }
 
+const mockRoute = {
+  sourceId: 10,
+  sourceType: 'document',
+  objectType: 'Page',
+  controllerTemplate: 'Cms:Articles:default',
+  translationLinks: [],
+}
+
 const defaultProps: TemplateProps = {
   data: mockPage,
   route: mockRoute,
   locale: 'en',
   sitePrefix: 'default',
+  searchParams: {},
+  pathname: '/en/articles',
 }
 
 describe('ContentArticles', () => {
-  it('renders the page title as h1', () => {
-    render(<ContentArticles {...defaultProps} />)
+  it('renders the page title as h1', async () => {
+    const Component = await ContentArticles(defaultProps)
+    render(Component)
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Articles')
   })
 
-  it('renders breadcrumb navigation', () => {
-    render(<ContentArticles {...defaultProps} />)
+  it('renders breadcrumb navigation', async () => {
+    const Component = await ContentArticles(defaultProps)
+    render(Component)
     expect(screen.getByRole('navigation', { name: /breadcrumb/i })).toBeInTheDocument()
   })
 
-  it('renders BlockRenderer when editables are present', () => {
+  it('renders BlockRenderer when editables are present', async () => {
     const pageWithEditables: Page = {
       ...mockPage,
       editables: [{ type: 'rich-text', order: 1, content: '<p>Hello</p>' }],
     }
 
-    render(<ContentArticles {...defaultProps} data={pageWithEditables} />)
+    const Component = await ContentArticles({ ...defaultProps, data: pageWithEditables })
+    render(Component)
     expect(screen.getByTestId('block-renderer')).toBeInTheDocument()
   })
 
-  it('does not render BlockRenderer when editables are empty', () => {
-    render(<ContentArticles {...defaultProps} />)
+  it('does not render BlockRenderer when editables are empty', async () => {
+    const Component = await ContentArticles(defaultProps)
+    render(Component)
     expect(screen.queryByTestId('block-renderer')).not.toBeInTheDocument()
   })
 })
