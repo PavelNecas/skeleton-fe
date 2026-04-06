@@ -17,6 +17,7 @@ const mockImage = {
   ],
   width: 1200,
   height: 630,
+  copyright: '',
 }
 
 describe('ImageBlock', () => {

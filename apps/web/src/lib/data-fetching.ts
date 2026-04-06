@@ -1,5 +1,12 @@
 import { cache } from 'react'
-import type { Article, Page, Property } from '@skeleton-fe/sdk-elastic'
+import type {
+  Article,
+  ArticleCategory,
+  ArticleListingParams,
+  ArticleListingResult,
+  Page,
+  Property,
+} from '@skeleton-fe/sdk-elastic'
 
 import { getElasticClient } from './elastic-client'
 import type { RouteInfo } from './types'
@@ -28,6 +35,24 @@ export const fetchPageData = cache(
       default:
         return null
     }
+  },
+)
+
+export const fetchArticleListing = cache(
+  async (
+    sitePrefix: string,
+    locale: string,
+    params?: ArticleListingParams,
+  ): Promise<ArticleListingResult> => {
+    const es = getElasticClient()
+    return es.articles.findAll(sitePrefix, locale, params)
+  },
+)
+
+export const fetchArticleCategories = cache(
+  async (sitePrefix: string, locale: string): Promise<ArticleCategory[]> => {
+    const es = getElasticClient()
+    return es.articles.getCategories(sitePrefix, locale)
   },
 )
 

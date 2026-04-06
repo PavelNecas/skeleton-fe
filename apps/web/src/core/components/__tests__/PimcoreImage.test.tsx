@@ -24,6 +24,7 @@ const mockImage: PimcoreImageType = {
   ],
   width: 1200,
   height: 630,
+  copyright: '',
 }
 
 describe('PimcoreImage', () => {

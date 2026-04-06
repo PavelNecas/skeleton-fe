@@ -69,7 +69,10 @@ import CatchAllPage from '../[[...path]]/page'
 
 describe('CatchAllPage', () => {
   it('renders the resolved template component', async () => {
-    const jsx = await CatchAllPage()
+    const jsx = await CatchAllPage({
+      params: Promise.resolve({}),
+      searchParams: Promise.resolve({}),
+    })
     render(jsx)
     expect(screen.getByTestId('template-stub')).toBeInTheDocument()
   })

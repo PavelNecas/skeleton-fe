@@ -23,6 +23,7 @@ const mockImage = {
   ],
   width: 750,
   height: 300,
+  copyright: '',
 }
 
 describe('CrossroadBlock (Editable)', () => {

@@ -36,6 +36,8 @@ export interface TemplateProps {
   route: RouteInfo
   locale: string
   sitePrefix: string
+  searchParams?: Record<string, string | string[] | undefined>
+  pathname?: string
 }
 
 /**
