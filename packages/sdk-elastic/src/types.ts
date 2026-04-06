@@ -40,6 +40,7 @@ export interface PimcoreImage {
   sources: ImageSource[]
   width: number
   height: number
+  copyright: string
 }
 
 // ============================================================

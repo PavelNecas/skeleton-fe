@@ -138,4 +138,88 @@ describe('ElasticClient', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe('searchWithTotal', () => {
+    it('returns items and total count', async () => {
+      const { Client } = await import('@elastic/elasticsearch');
+      const mockEsClient = vi.mocked(Client).mock.results[0].value;
+      mockEsClient.search.mockResolvedValueOnce({
+        hits: {
+          total: { value: 42, relation: 'eq' },
+          hits: [
+            { _source: { id: '1' } },
+            { _source: { id: '2' } },
+          ],
+        },
+      });
+
+      const result = await client.searchWithTotal<{ id: string }>('test_index', {
+        query: { match_all: {} },
+      });
+
+      expect(result.items).toHaveLength(2);
+      expect(result.items[0]).toEqual({ id: '1' });
+      expect(result.total).toBe(42);
+    });
+
+    it('returns zero total and empty items when no hits', async () => {
+      const { Client } = await import('@elastic/elasticsearch');
+      const mockEsClient = vi.mocked(Client).mock.results[0].value;
+      mockEsClient.search.mockResolvedValueOnce({
+        hits: {
+          total: { value: 0, relation: 'eq' },
+          hits: [],
+        },
+      });
+
+      const result = await client.searchWithTotal('test_index', {
+        query: { match_all: {} },
+      });
+
+      expect(result.items).toHaveLength(0);
+      expect(result.total).toBe(0);
+    });
+  });
+
+  describe('aggregate', () => {
+    it('returns aggregation results with size 0', async () => {
+      const { Client } = await import('@elastic/elasticsearch');
+      const mockEsClient = vi.mocked(Client).mock.results[0].value;
+      mockEsClient.search.mockResolvedValueOnce({
+        hits: { total: { value: 0, relation: 'eq' }, hits: [] },
+        aggregations: {
+          category_ids: {
+            buckets: [
+              { key: '10', doc_count: 5, category_name: { buckets: [{ key: 'Tech', doc_count: 5 }] } },
+            ],
+          },
+        },
+      });
+
+      const result = await client.aggregate('test_index', {
+        query: { match_all: {} },
+        aggs: { category_ids: { terms: { field: 'categories.id' } } },
+      });
+
+      expect(mockEsClient.search).toHaveBeenCalledWith({
+        index: 'test_index',
+        size: 0,
+        query: { match_all: {} },
+        aggs: { category_ids: { terms: { field: 'categories.id' } } },
+      });
+      expect(result).toHaveProperty('category_ids');
+    });
+
+    it('returns empty object when no aggregations', async () => {
+      const { Client } = await import('@elastic/elasticsearch');
+      const mockEsClient = vi.mocked(Client).mock.results[0].value;
+      mockEsClient.search.mockResolvedValueOnce({
+        hits: { total: { value: 0, relation: 'eq' }, hits: [] },
+      });
+
+      const result = await client.aggregate('test_index', { query: { match_all: {} } });
+
+      expect(result).toEqual({});
+    });
+  });
 });
