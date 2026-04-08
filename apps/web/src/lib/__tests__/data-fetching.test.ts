@@ -143,7 +143,6 @@ describe('fetchPageData', () => {
         locale: LOCALE,
         published: true,
         path: '/articles/test',
-        slug: 'test',
         frontendTemplate: null,
         modificationDate: 1700000000,
         creationDate: 1700000000,

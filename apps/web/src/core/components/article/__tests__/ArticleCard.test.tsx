@@ -19,8 +19,7 @@ const baseArticle: Article = {
   summary: null,
   locale: 'cs',
   published: true,
-  path: '/Cms/Articles/test-article',
-  slug: '/test-article',
+  path: '/test-article',
   frontendTemplate: null,
   modificationDate: 1700000000,
   creationDate: 1700000000,
@@ -70,7 +69,7 @@ describe('ArticleCard', () => {
     expect(container.querySelector('[data-testid="pimcore-image"]')).toBeNull()
   })
 
-  it('links to the article slug', () => {
+  it('links to the article path', () => {
     const { container } = render(<ArticleCard article={baseArticle} locale="cs" />)
     const link = container.querySelector('a')
     expect(link?.getAttribute('href')).toBe('/test-article')

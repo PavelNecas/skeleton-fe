@@ -22,7 +22,7 @@ describe('ArticlesIndex', () => {
       const mockArticle = {
         id: '10',
         name: 'Test Article',
-        slug: 'test-article',
+        path: '/test-article',
         locale: 'cs',
         published: true,
         contentBlocks: [],
@@ -44,16 +44,16 @@ describe('ArticlesIndex', () => {
     })
   })
 
-  describe('findBySlug', () => {
-    it('searches with slug and published filter', async () => {
+  describe('findByPath', () => {
+    it('searches with path and published filter', async () => {
       mockClient.searchOne.mockResolvedValueOnce(null)
 
-      await articlesIndex.findBySlug('skeleton_localhost', 'en', 'my-article')
+      await articlesIndex.findByPath('skeleton_localhost', 'en', '/my-article')
 
       expect(mockClient.searchOne).toHaveBeenCalledWith('skeleton_localhost_articles_en', {
         query: {
           bool: {
-            must: [{ term: { slug: 'my-article' } }, { term: { published: true } }],
+            must: [{ term: { path: '/my-article' } }, { term: { published: true } }],
           },
         },
       })
@@ -62,7 +62,7 @@ describe('ArticlesIndex', () => {
     it('returns null when article not found', async () => {
       mockClient.searchOne.mockResolvedValueOnce(null)
 
-      const result = await articlesIndex.findBySlug('skeleton_localhost', 'cs', 'not-found')
+      const result = await articlesIndex.findByPath('skeleton_localhost', 'cs', '/not-found')
 
       expect(result).toBeNull()
     })

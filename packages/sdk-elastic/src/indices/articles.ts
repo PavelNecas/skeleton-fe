@@ -30,7 +30,6 @@ export interface Article {
   locale: string
   published: boolean
   path: string
-  slug: string
   frontendTemplate: string | null
   modificationDate: number
   creationDate: number
@@ -72,11 +71,11 @@ export class ArticlesIndex {
     })
   }
 
-  async findBySlug(sitePrefix: string, locale: string, slug: string): Promise<Article | null> {
+  async findByPath(sitePrefix: string, locale: string, path: string): Promise<Article | null> {
     return this.client.searchOne<Article>(this.indexName(sitePrefix, locale), {
       query: {
         bool: {
-          must: [{ term: { slug } }, { term: { published: true } }],
+          must: [{ term: { path } }, { term: { published: true } }],
         },
       },
     })

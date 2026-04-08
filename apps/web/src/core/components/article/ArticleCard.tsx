@@ -23,7 +23,7 @@ export function ArticleCard({ article, locale }: ArticleCardProps) {
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-      <a href={article.slug} className="flex flex-1 flex-col">
+      <a href={article.path} className="flex flex-1 flex-col">
         <div className="aspect-[3/2] w-full bg-gray-100">
           {article.images?.articleCard && (
             <PimcoreImage
